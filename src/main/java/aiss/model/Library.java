@@ -8,7 +8,7 @@ public class Library {
 	private String id;
 	private String name;
 	private String description;
-	private List<Film> songs;
+	private List<Film> films;
 	
 	public Library() {}
 	
@@ -16,8 +16,8 @@ public class Library {
 		this.name = name;
 	}
 	
-	protected void setSongs(List<Film> s) {
-		songs = s;
+	protected void setFilms(List<Film> s) {
+		films = s;
 	}
 	
 	public String getId() {
@@ -44,39 +44,39 @@ public class Library {
 		this.description = description;
 	}
 	
-	public List<Film> getSongs() {
-		return songs;
+	public List<Film> getFilms() {
+		return films;
 	}
 	
-	public Film getSong(String id) {
-		if (songs==null)
+	public Film getFilm(String id) {
+		if (films==null)
 			return null;
 		
-		Film song =null;
-		for(Film s: songs)
-			if (s.getId().equals(id))
+		Film film =null;
+		for(Film f: films)
+			if (f.getId().equals(id))
 			{
-				song=s;
+				film=f;
 				break;
 			}
 		
-		return song;
+		return film;
 	}
 	
-	public void addSong(Film s) {
-		if (songs==null)
-			songs = new ArrayList<Film>();
-		songs.add(s);
+	public void addFilm(Film f) {
+		if (films==null)
+			films = new ArrayList<Film>();
+		films.add(f);
 	}
 	
-	public void deleteSong(Film s) {
-		songs.remove(s);
+	public void deleteFilm(Film f) {
+		films.remove(f);
 	}
 	
-	public void deleteSong(String id) {
-		Film s = getSong(id);
-		if (s!=null)
-			songs.remove(s);
+	public void deleteFilm(String id) {
+		Film f = getFilm(id);
+		if (f!=null)
+			films.remove(f);
 	}
 
 }
