@@ -3,20 +3,20 @@ package aiss.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Playlist {
+public class Library {
 
 	private String id;
 	private String name;
 	private String description;
-	private List<Song> songs;
+	private List<Film> songs;
 	
-	public Playlist() {}
+	public Library() {}
 	
-	public Playlist(String name) {
+	public Library(String name) {
 		this.name = name;
 	}
 	
-	protected void setSongs(List<Song> s) {
+	protected void setSongs(List<Film> s) {
 		songs = s;
 	}
 	
@@ -44,16 +44,16 @@ public class Playlist {
 		this.description = description;
 	}
 	
-	public List<Song> getSongs() {
+	public List<Film> getSongs() {
 		return songs;
 	}
 	
-	public Song getSong(String id) {
+	public Film getSong(String id) {
 		if (songs==null)
 			return null;
 		
-		Song song =null;
-		for(Song s: songs)
+		Film song =null;
+		for(Film s: songs)
 			if (s.getId().equals(id))
 			{
 				song=s;
@@ -63,18 +63,18 @@ public class Playlist {
 		return song;
 	}
 	
-	public void addSong(Song s) {
+	public void addSong(Film s) {
 		if (songs==null)
-			songs = new ArrayList<Song>();
+			songs = new ArrayList<Film>();
 		songs.add(s);
 	}
 	
-	public void deleteSong(Song s) {
+	public void deleteSong(Film s) {
 		songs.remove(s);
 	}
 	
 	public void deleteSong(String id) {
-		Song s = getSong(id);
+		Film s = getSong(id);
 		if (s!=null)
 			songs.remove(s);
 	}

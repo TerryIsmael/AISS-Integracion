@@ -3,7 +3,8 @@ package aiss.api.resources;
 import java.net.URI;
 
 import java.util.Collection;
-
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -12,7 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -23,49 +24,68 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.NotFoundException;
 
-import aiss.model.Playlist;
-import aiss.model.Song;
-import aiss.model.repository.MapPlaylistRepository;
-import aiss.model.repository.PlaylistRepository;
+import aiss.model.Library;
+import aiss.model.Film;
+import aiss.model.repository.MapLibraryRepository;
+import aiss.model.repository.LibraryRepository;
 
 
 
 
 
 @Path("/lists")
-public class PlaylistResource {
+public class LibraryResource {
 	
 	/* Singleton */
-	private static PlaylistResource _instance=null;
-	PlaylistRepository repository;
+	private static LibraryResource _instance=null;
+	LibraryRepository repository;
 	
-	private PlaylistResource() {
-		repository=MapPlaylistRepository.getInstance();
+	private LibraryResource() {
+		repository=MapLibraryRepository.getInstance();
 
 	}
 	
-	public static PlaylistResource getInstance()
+	public static LibraryResource getInstance()
 	{
 		if(_instance==null)
-				_instance=new PlaylistResource();
+				_instance=new LibraryResource();
 		return _instance;
 	}
-	
+
 
 	@GET
 	@Produces("application/json")
-	public Collection<Playlist> getAll()
+	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name)
 	{
-		return repository.getAllPlaylists();
+		Collection<Library> res=repository.getAllPlaylists();
+		if (isEmpty!=null) {
+			if (isEmpty==true) {
+				res= res.stream().filter(x->x.getSongs().size()==0).collect(Collectors.toList());
+			}else {
+				res= res.stream().filter(x->x.getSongs().size()!=0).collect(Collectors.toList());
+			}
+		}
+
+		if (name!=null) {
+			res= res.stream().filter(x->x.getName()==name).collect(Collectors.toList());
+		}
+		if (order!=null && (order.equals("name") || order.equals("-name"))) {
+			if (order.equals("name")) {
+				res= res.stream().sorted(Comparator.comparing(x->x.getName())).collect(Collectors.toList());
+			}else {
+				res= res.stream().sorted(Comparator.comparing(x->x.getName(),Comparator.reverseOrder())).collect(Collectors.toList());
+			}
+		}
+		return res;
 	}
 	
 	
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public Playlist get(@PathParam("id") String id)
+	public Library get(@PathParam("id") String id)
 	{
-		Playlist list = repository.getPlaylist(id);
+		Library list = repository.getPlaylist(id);
 		
 		if (list == null) {
 			throw new NotFoundException("The playlist with id="+ id +" was not found");			
@@ -77,7 +97,7 @@ public class PlaylistResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addPlaylist(@Context UriInfo uriInfo, Playlist playlist) {
+	public Response addPlaylist(@Context UriInfo uriInfo, Library playlist) {
 		if (playlist.getName() == null || "".equals(playlist.getName()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
@@ -97,8 +117,8 @@ public class PlaylistResource {
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updatePlaylist(Playlist playlist) {
-		Playlist oldplaylist = repository.getPlaylist(playlist.getId());
+	public Response updatePlaylist(Library playlist) {
+		Library oldplaylist = repository.getPlaylist(playlist.getId());
 		if (oldplaylist == null) {
 			throw new NotFoundException("The playlist with id="+ playlist.getId() +" was not found");			
 		}
@@ -120,7 +140,7 @@ public class PlaylistResource {
 	@DELETE
 	@Path("/{id}")
 	public Response removePlaylist(@PathParam("id") String id) {
-		Playlist toberemoved=repository.getPlaylist(id);
+		Library toberemoved=repository.getPlaylist(id);
 		if (toberemoved == null)
 			throw new NotFoundException("The playlist with id="+ id +" was not found");
 		else
@@ -137,8 +157,8 @@ public class PlaylistResource {
 	public Response addSong(@Context UriInfo uriInfo,@PathParam("playlistId") String playlistId, @PathParam("songId") String songId)
 	{				
 		
-		Playlist playlist = repository.getPlaylist(playlistId);
-		Song song = repository.getSong(songId);
+		Library playlist = repository.getPlaylist(playlistId);
+		Film song = repository.getSong(songId);
 		
 		if (playlist==null)
 			throw new NotFoundException("The playlist with id=" + playlistId + " was not found");
@@ -163,8 +183,8 @@ public class PlaylistResource {
 	@DELETE
 	@Path("/{playlistId}/{songId}")
 	public Response removeSong(@PathParam("playlistId") String playlistId, @PathParam("songId") String songId) {
-		Playlist playlist = repository.getPlaylist(playlistId);
-		Song song = repository.getSong(songId);
+		Library playlist = repository.getPlaylist(playlistId);
+		Film song = repository.getSong(songId);
 		
 		if (playlist==null)
 			throw new NotFoundException("The playlist with id=" + playlistId + " was not found");

@@ -1,0 +1,453 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://localhost:8089/api'
+info:
+  description: Modify this information
+  version: 1.0.0
+  title: Playlist_Music_API_AISS - Modify this information
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: songs
+    description: Songs
+  - name: lists
+    description: Playlists
+paths:
+  /songs:
+    get:
+      tags:
+        - songs
+      summary: Get songs
+      description: Get all songs
+      operationId: getSongs
+      parameters:
+        - name: order
+          in: query
+          description: Order results by album, artist or year
+          required: false
+          schema:
+            type: string
+            enum:
+              - album
+              - '-album'
+              - artist
+              - '-artist'
+              - year
+              - '-year'
+        - name: q
+          in: query
+          description: Query to filter
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description:  Maximum number of results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: offset
+          in: query
+          description: Offset of the results
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - title
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    artist:
+                      type: string
+                    album:
+                      type: string
+                    year:
+                      type: string
+                  example:
+                    id: s1
+                    title: Rolling in the Deep
+                    artist: Adele
+                    album: '21'
+                    year: '2011'
+        '400':
+          description: Bad request
+    post:
+      tags:
+        - songs
+      summary: Create a song
+      description: Create a song
+      operationId: createSong
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                artist:
+                  type: string
+                album:
+                  type: string
+                year:
+                  type: string
+              example:
+                id: s1
+                title: Rolling in the Deep
+                artist: Adele
+                album: '21'
+                year: '2011'
+        description: Song to create
+        required: true
+      responses:
+        '201':
+          description: Song created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - title
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  artist:
+                    type: string
+                  album:
+                    type: string
+                  year:
+                    type: string
+                example:
+                  id: s1
+                  title: Rolling in the Deep
+                  artist: Adele
+                  album: '21'
+                  year: '2011'
+        '400':
+          description: Bad request
+  '/songs/{id}':
+    delete:
+      tags:
+        - songs
+      summary: Delete song
+      description: Delete song
+      operationId: deleteSong
+      parameters:
+        - name: id
+          in: path
+          description: Id of the song
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Song deleted
+        '404':
+          description: Song not found
+  /lists:
+    get:
+      tags:
+        - lists
+      summary: Get playlists
+      description: Get all playlists
+      operationId: getPlaylists
+      parameters:
+        - name: order
+          in: query
+          description: Order results by name
+          required: false
+          schema:
+            type: string
+            enum:
+              - name
+              - '-name'
+        - name: isEmpty
+          in: query
+          description: Filter playlists with no songs
+          required: false
+          schema:
+            type: boolean
+        - name: name
+          in: query
+          description: Filter playlists by name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    songs:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - title
+                        properties:
+                          id:
+                            type: string
+                          title:
+                            type: string
+                          artist:
+                            type: string
+                          album:
+                            type: string
+                          year:
+                            type: string
+                  example:
+                    id: p5
+                    name: Favourites
+                    description: My favourite songs
+                    songs:
+                      - id: s1
+                        title: Rolling in the Deep
+                        artist: Adele
+                        album: '21'
+                        year: '2011'
+        '400':
+          description: Bad request
+    put:
+      tags:
+        - lists
+      summary: Update a playlist
+      description: Update a playlist
+      operationId: updatePlaylist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                songs:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - title
+                    properties:
+                      id:
+                        type: string
+                      title:
+                        type: string
+                      artist:
+                        type: string
+                      album:
+                        type: string
+                      year:
+                        type: string
+              example:
+                id: p5
+                name: Favourites
+                description: My favourite songs
+                songs:
+                  - id: s1
+                    title: Rolling in the Deep
+                    artist: Adele
+                    album: '21'
+                    year: '2011'
+        description: Playlist to update
+      responses:
+        '204':
+          description: Playlist updated
+        '400':
+          description: Bad request
+        '404':
+          description: Playlist not found
+  '/lists/{id}':
+    get:
+      tags:
+        - lists
+      summary: Get a playlist
+      description: Get a playlist
+      operationId: getPlaylist
+      parameters:
+        - name: id
+          in: path
+          description: Id of the playlist
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Playlist found
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  songs:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        artist:
+                          type: string
+                        album:
+                          type: string
+                        year:
+                          type: string
+                example:
+                  id: p5
+                  name: Favourites
+                  description: My favourite songs
+                  songs:
+                    - id: s1
+                      title: Rolling in the Deep
+                      artist: Adele
+                      album: '21'
+                      year: '2011'
+        '404':
+          description: Playlist not found
+  '/lists/{playlistId}/{songId}':
+    post:
+      tags:
+        - lists
+      summary: Add song to playlist
+      description: Add song to playlist
+      operationId: addSongToPlaylist
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+      parameters:
+        - name: playlistId
+          in: path
+          description: Id of the playlist
+          required: true
+          schema:
+            type: string
+        - name: songId
+          in: path
+          description: Id of the song
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Song added to playlist
+          content:
+            application/json:
+              schema:
+                required:
+                  - name
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  songs:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - title
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        artist:
+                          type: string
+                        album:
+                          type: string
+                        year:
+                          type: string
+                example:
+                  id: p5
+                  name: Favourites
+                  description: My favourite songs
+                  songs:
+                    - id: s1
+                      title: Rolling in the Deep
+                      artist: Adele
+                      album: '21'
+                      year: '2011'
+        '400':
+          description: Bad request
+        '404':
+          description: Playlist or song not found
+    delete:
+      tags:
+        - lists
+      summary: Delete song from playlist
+      description: Delete song from playlist
+      operationId: deleteSongFromPlayist
+      parameters:
+        - name: playlistId
+          in: path
+          description: Id of the playlist
+          required: true
+          schema:
+            type: string
+        - name: songId
+          in: path
+          description: Id of the song
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Song deleted from playlist
+        '404':
+          description: Playlist or song not found
