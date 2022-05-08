@@ -1,29 +1,45 @@
 package aiss.model;
 
+import java.time.Duration;
+import java.util.Date;
+
 public class Film {
 
 	private String id;
 	private String title;
-	private String artist;
-	private String album;
-	private String year;
+	private String genre;
+	private Date premiere;
+	private Duration runtime;
+	private Double score;
+	private String language;
 
 	public Film() {
 	}
 
-	public Film(String title, String artist, String album, String year) {
+	public Film(String title, String genre, Date premiere, Duration runtime, Double score, String language) {
+		super();
 		this.title = title;
-		this.artist = artist;
-		this.album = album;
-		this.year = year;
+		this.genre = genre;
+		this.premiere = premiere;
+		this.runtime = runtime;
+		this.score = score;
+		this.language = language;
 	}
 	
-	public Film(String id, String title, String artist, String album, String year) {
+	public Film(String id, String title, String genre, Date premiere, Duration runtime, Double score, String language) {
+		super();
 		this.id=id;
 		this.title = title;
-		this.artist = artist;
-		this.album = album;
-		this.year = year;
+		this.genre = genre;
+		this.premiere = premiere;
+		this.runtime = runtime;
+		this.score = score;
+		this.language = language;
+	}
+	
+	public Film(String s) {
+	
+		
 	}
 
 	public String getId() {
@@ -42,28 +58,45 @@ public class Film {
 		this.title = title;
 	}
 
-	public String getArtist() {
-		return artist;
+	public String getGenre() {
+		return genre;
 	}
 
-	public void setArtist(String artist) {
-		this.artist = artist;
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 
-	public String getAlbum() {
-		return album;
+	public Date getPremiere() {
+		return premiere;
 	}
 
-	public void setAlbum(String album) {
-		this.album = album;
+	public void setPremiere(Date premiere) {
+		this.premiere = premiere;
 	}
 
-	public String getYear() {
-		return year;
+	public Duration getRuntime() {
+		return runtime;
 	}
 
-	public void setYear(String year) {
-		this.year = year;
+	public void setRuntime(Duration runtime) {
+		this.runtime = runtime;
 	}
+
+	public Double getScore() {
+		return score;
+	}
+
+	public void setScore(Double score) {
+		this.score = score;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
 
 }

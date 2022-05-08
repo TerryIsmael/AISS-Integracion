@@ -35,12 +35,7 @@ public class MapLibraryRepository implements LibraryRepository{
 		
 		libraryMap = new HashMap<String,Library>();
 		filmMap = new HashMap<String,Film>();
-	
-		try{
-			Files.lines(Path.of(""));
-		}catch(IOException e) {
-			System.out.println(e+". No se puedo encontrar/leer el fichero");
-		}
+		
 		
 	}
 	
