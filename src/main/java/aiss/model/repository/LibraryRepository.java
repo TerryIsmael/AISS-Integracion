@@ -16,6 +16,7 @@ public interface LibraryRepository {
 	public void deleteFilm(String filmId);
 	
 	// Playlists
+<<<<<<< HEAD
 	public void addLibrary(Library p);
 	public Collection<Library> getAllLibraries();
 	public Library getLibrary(String playlistId);
@@ -24,6 +25,16 @@ public interface LibraryRepository {
 	public Collection<Film> getAll(String playlistId);
 	public void addFilm(String playlistId, String songId);
 	public void removeFilm(String playlistId, String songId); 
+=======
+	public void addLibrary(Library l);
+	public Collection<Library> getAllLibraries();
+	public Library getLibrary(String libraryId);
+	public void updateLibrary(Library l);
+	public void deleteLibrary(String libraryId);
+	public Collection<Film> getAll(String libraryId);
+	public void addFilm(String libraryId, String filmId);
+	public void removeFilm(String libraryId, String filmId); 
+>>>>>>> branch 'main' of https://github.com/ismbargar/AISS-Integracion.git
 
 	
 	

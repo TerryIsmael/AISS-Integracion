@@ -118,12 +118,12 @@ public class FilmResource {
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removeSong(@PathParam("id") String songId) {
-		Film toberemoved=repository.getSong(songId);
+	public Response removeSong(@PathParam("id") String filmId) {
+		Film toberemoved=repository.getFilm(filmId);
 		if (toberemoved == null)
-			throw new NotFoundException("The playlist with id="+ songId +" was not found");
+			throw new NotFoundException("The playlist with id="+ filmId +" was not found");
 		else
-			repository.deleteSong(songId);
+			repository.deleteFilm(filmId);
 		
 		return Response.noContent().build();
 	}
