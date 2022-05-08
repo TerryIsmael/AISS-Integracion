@@ -16,9 +16,6 @@ public class Film {
 	private Double score;
 	private List<String> language;
 
-	public Film() {
-	}
-
 	public Film(String title, String genre, LocalDate premiere, Duration runtime, Double score, List<String> language) {
 		super();
 		this.title = title;
