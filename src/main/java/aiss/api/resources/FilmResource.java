@@ -49,19 +49,19 @@ public class FilmResource {
 	@Produces("application/json")
 	public Collection<Film> getAll()
 	{
-		return repository.getAllSongs();
+		return repository.getAllFilms();
 	}
 	
 	
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public Film get(@PathParam("id") String songId)
+	public Film get(@PathParam("id") String filmId)
 	{
-		Film song=repository.getSong(songId);
+		Film song=repository.getFilm(filmId);
 		
 		if (song == null) {
-			throw new NotFoundException("The song with id="+ songId +" was not found");			
+			throw new NotFoundException("The song with id="+ filmId +" was not found");			
 		}
 		
 		return song;
@@ -75,7 +75,7 @@ public class FilmResource {
 		if (film.getTitle() == null || "".equals(film.getTitle()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
-		repository.addSong(film);
+		repository.addFilm(film);
 
 		// Builds the response. Returns the playlist the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
@@ -89,23 +89,30 @@ public class FilmResource {
 	@PUT
 	@Consumes("application/json")
 	public Response updateSong(Film film) {
-		Film oldsong = repository.getSong(film.getId());
+		Film oldsong = repository.getFilm(film.getId());
 		if (oldsong == null) {
 			throw new NotFoundException("The song with id="+ film.getId() +" was not found");			
 		}
 		
-		if (film.getAlbum()!=null)
-			oldsong.setAlbum(film.getAlbum());
-		
-		if (film.getArtist()!=null)
-			oldsong.setArtist(film.getArtist());
-		
 		if (film.getTitle()!=null)
 			oldsong.setTitle(film.getTitle());
 		
-		if (film.getYear()!=null)
-			oldsong.setYear(film.getYear());
+		if (film.getGenre()!=null)
+			oldsong.setGenre(film.getGenre());
+		
+		if (film.getPremiere()!=null)
+			oldsong.setPremiere(film.getPremiere());
+		
+		if (film.getRuntime()!=null)
+			oldsong.setRuntime(film.getRuntime());
+		
+		if (film.getScore()!=null)
+			oldsong.setScore(film.getScore());
+		
+		if (film.getRuntime()!=null)
+			oldsong.setLanguage(film.getLanguage());
 
+		
 		return Response.noContent().build();
 	}
 	

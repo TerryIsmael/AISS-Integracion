@@ -2,6 +2,7 @@ package aiss.model;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 
 public class Film {
 
@@ -11,12 +12,12 @@ public class Film {
 	private Date premiere;
 	private Duration runtime;
 	private Double score;
-	private String language;
+	private List<String> language;
 
 	public Film() {
 	}
 
-	public Film(String title, String genre, Date premiere, Duration runtime, Double score, String language) {
+	public Film(String title, String genre, Date premiere, Duration runtime, Double score, List<String> language) {
 		super();
 		this.title = title;
 		this.genre = genre;
@@ -26,7 +27,7 @@ public class Film {
 		this.language = language;
 	}
 	
-	public Film(String id, String title, String genre, Date premiere, Duration runtime, Double score, String language) {
+	public Film(String id, String title, String genre, Date premiere, Duration runtime, Double score, List<String> language) {
 		super();
 		this.id=id;
 		this.title = title;
@@ -90,11 +91,11 @@ public class Film {
 		this.score = score;
 	}
 
-	public String getLanguage() {
+	public List<String> getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(String language) {
+	public void setLanguage(List<String> language) {
 		this.language = language;
 	}
 

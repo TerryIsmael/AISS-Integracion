@@ -8,6 +8,6 @@ import aiss.model.Film;
 public class Data {
 	public static List<Film> lectura(){
 		List<Film> res=new ArrayList<>();
-		
+		res.add(null);
 	}
 }
