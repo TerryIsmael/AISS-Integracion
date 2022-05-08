@@ -57,12 +57,12 @@ public class LibraryResource {
 	@Produces("application/json")
 	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name)
 	{
-		Collection<Library> res=repository.getAllPlaylists();
+		Collection<Library> res=repository.getAllLibrary();
 		if (isEmpty!=null) {
 			if (isEmpty==true) {
-				res= res.stream().filter(x->x.getSongs().size()==0).collect(Collectors.toList());
+				res= res.stream().filter(x->x.getFilms().size()==0).collect(Collectors.toList());
 			}else {
-				res= res.stream().filter(x->x.getSongs().size()!=0).collect(Collectors.toList());
+				res= res.stream().filter(x->x.getFilms().size()!=0).collect(Collectors.toList());
 			}
 		}
 
@@ -85,7 +85,7 @@ public class LibraryResource {
 	@Produces("application/json")
 	public Library get(@PathParam("id") String id)
 	{
-		Library list = repository.getPlaylist(id);
+		Library list = repository.getLibrary(id);
 		
 		if (list == null) {
 			throw new NotFoundException("The playlist with id="+ id +" was not found");			
@@ -97,54 +97,54 @@ public class LibraryResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addPlaylist(@Context UriInfo uriInfo, Library playlist) {
-		if (playlist.getName() == null || "".equals(playlist.getName()))
+	public Response addLibrary(@Context UriInfo uriInfo, Library library) {
+		if (library.getName() == null || "".equals(library.getName()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
-		if (playlist.getSongs()!=null)
+		if (library.getFilms()!=null)
 			throw new BadRequestException("The songs property is not editable.");
 
-		repository.addPlaylist(playlist);
+		repository.addLibrary(library);
 
 		// Builds the response. Returns the playlist the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
-		URI uri = ub.build(playlist.getId());
+		URI uri = ub.build(library.getId());
 		ResponseBuilder resp = Response.created(uri);
-		resp.entity(playlist);			
+		resp.entity(library);			
 		return resp.build();
 	}
 
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updatePlaylist(Library playlist) {
-		Library oldplaylist = repository.getPlaylist(playlist.getId());
-		if (oldplaylist == null) {
-			throw new NotFoundException("The playlist with id="+ playlist.getId() +" was not found");			
+	public Response updateLibrary(Library library) {
+		Library oldlibrary = repository.getLibrary(library.getId());
+		if (oldlibrary == null) {
+			throw new NotFoundException("The playlist with id="+ library.getId() +" was not found");			
 		}
 		
-		if (playlist.getSongs()!=null)
+		if (library.getFilms()!=null)
 			throw new BadRequestException("The songs property is not editable.");
 		
 		// Update name
-		if (playlist.getName()!=null)
-			oldplaylist.setName(playlist.getName());
+		if (library.getName()!=null)
+			oldlibrary.setName(library.getName());
 		
 		// Update description
-		if (playlist.getDescription()!=null)
-			oldplaylist.setDescription(playlist.getDescription());
+		if (library.getDescription()!=null)
+			oldlibrary.setDescription(library.getDescription());
 		
 		return Response.noContent().build();
 	}
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removePlaylist(@PathParam("id") String id) {
-		Library toberemoved=repository.getPlaylist(id);
+	public Response removeLibrary(@PathParam("id") String id) {
+		Library toberemoved=repository.getLibrary(id);
 		if (toberemoved == null)
 			throw new NotFoundException("The playlist with id="+ id +" was not found");
 		else
-			repository.deletePlaylist(id);
+			repository.deleteLibrary(id);
 		
 		return Response.noContent().build();
 	}
@@ -154,46 +154,46 @@ public class LibraryResource {
 	@Path("/{playlistId}/{songId}")
 	@Consumes("text/plain")
 	@Produces("application/json")
-	public Response addSong(@Context UriInfo uriInfo,@PathParam("playlistId") String playlistId, @PathParam("songId") String songId)
+	public Response addFilm(@Context UriInfo uriInfo,@PathParam("playlistId") String libraryId, @PathParam("songId") String filmId)
 	{				
 		
-		Library playlist = repository.getPlaylist(playlistId);
-		Film song = repository.getSong(songId);
+		Library library = repository.getLibrary(libraryId);
+		Film film = repository.getFilm(filmId);
 		
-		if (playlist==null)
-			throw new NotFoundException("The playlist with id=" + playlistId + " was not found");
+		if (library==null)
+			throw new NotFoundException("The playlist with id=" + libraryId + " was not found");
 		
-		if (song == null)
-			throw new NotFoundException("The song with id=" + songId + " was not found");
+		if (film == null)
+			throw new NotFoundException("The song with id=" + filmId + " was not found");
 		
-		if (playlist.getSong(songId)!=null)
+		if (library.getFilm(filmId)!=null)
 			throw new BadRequestException("The song is already included in the playlist.");
 			
-		repository.addSong(playlistId, songId);		
+		repository.addFilm(libraryId, filmId);		
 
 		// Builds the response
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
-		URI uri = ub.build(playlistId);
+		URI uri = ub.build(libraryId);
 		ResponseBuilder resp = Response.created(uri);
-		resp.entity(playlist);			
+		resp.entity(library);			
 		return resp.build();
 	}
 	
 	
 	@DELETE
 	@Path("/{playlistId}/{songId}")
-	public Response removeSong(@PathParam("playlistId") String playlistId, @PathParam("songId") String songId) {
-		Library playlist = repository.getPlaylist(playlistId);
-		Film song = repository.getSong(songId);
+	public Response removeFilm(@PathParam("playlistId") String libraryId, @PathParam("songId") String filmId) {
+		Library library = repository.getLibrary(libraryId);
+		Film film = repository.getFilm(filmId);
 		
-		if (playlist==null)
-			throw new NotFoundException("The playlist with id=" + playlistId + " was not found");
+		if (library==null)
+			throw new NotFoundException("The playlist with id=" + libraryId + " was not found");
 		
-		if (song == null)
-			throw new NotFoundException("The song with id=" + songId + " was not found");
+		if (film == null)
+			throw new NotFoundException("The song with id=" + filmId + " was not found");
 		
 		
-		repository.removeSong(playlistId, songId);		
+		repository.removeFilm(libraryId, filmId);		
 		
 		return Response.noContent().build();
 	}
