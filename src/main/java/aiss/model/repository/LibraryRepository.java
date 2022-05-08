@@ -17,7 +17,7 @@ public interface LibraryRepository {
 	
 	// Playlists
 	public void addLibrary(Library l);
-	public Collection<Library> getAllLibrary();
+	public Collection<Library> getAllLibraries();
 	public Library getLibrary(String libraryId);
 	public void updateLibrary(Library l);
 	public void deleteLibrary(String libraryId);
