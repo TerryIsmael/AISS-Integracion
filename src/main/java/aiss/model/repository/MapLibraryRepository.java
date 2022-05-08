@@ -1,8 +1,5 @@
 package aiss.model.repository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +84,6 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 
 	
-	// Song related operations
 	
 	@Override
 	public void addFilm(Film s) {
