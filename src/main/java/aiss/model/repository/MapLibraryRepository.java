@@ -73,7 +73,7 @@ public class MapLibraryRepository implements LibraryRepository{
 	@Override
 	public void addFilm(String LibraryId, String songId) {
 		Library playlist = getLibrary(LibraryId);
-		playlist.addSong(filmMap.get(songId));
+		playlist.addFilm(filmMap.get(songId));
 	}
 
 	@Override
