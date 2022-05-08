@@ -40,10 +40,10 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 	
 	@Override
-	public void addLibrary(Library p) {
-		String id = "p" + index++;	
-		p.setId(id);
-		libraryMap.put(id,p);
+	public void addLibrary(Library lib) {
+		String id = "l" + index++;	
+		lib.setId(id);
+		libraryMap.put(id,lib);
 	}
 	
 	@Override
@@ -57,8 +57,8 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 	
 	@Override
-	public void updateLibrary(Library p) {
-		libraryMap.put(p.getId(),p);
+	public void updateLibrary(Library lib) {
+		libraryMap.put(lib.getId(),lib);
 	}
 
 	@Override
@@ -68,9 +68,9 @@ public class MapLibraryRepository implements LibraryRepository{
 	
 
 	@Override
-	public void addFilm(String LibraryId, String songId) {
-		Library playlist = getLibrary(LibraryId);
-		playlist.addFilm(filmMap.get(songId));
+	public void addFilm(String LibraryId, String filmId) {
+		Library library = getLibrary(LibraryId);
+		library.addFilm(filmMap.get(filmId));
 	}
 
 	@Override
@@ -79,17 +79,17 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 
 	@Override
-	public void removeFilm(String LibraryId, String songId) {
-		getLibrary(LibraryId).deleteFilm(songId);
+	public void removeFilm(String LibraryId, String filmId) {
+		getLibrary(LibraryId).deleteFilm(filmId);
 	}
 
 	
 	
 	@Override
-	public void addFilm(Film s) {
-		String id = "s" + index++;
-		s.setId(id);
-		filmMap.put(id, s);
+	public void addFilm(Film film) {
+		String id = "f" + index++;
+		film.setId(id);
+		filmMap.put(id, film);
 	}
 	
 	@Override
@@ -103,19 +103,19 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 
 	@Override
-	public void updateFilm(Film s) {
-		Film song = filmMap.get(s.getId());
-		song.setTitle(s.getTitle());
-		song.setGenre(s.getGenre());
-		song.setPremiere(s.getPremiere());
-		song.setRuntime(s.getRuntime());
-		song.setScore(s.getScore());
-		song.setLanguage(s.getLanguage());
+	public void updateFilm(Film oldFilm) {
+		Film film = filmMap.get(oldFilm.getId());
+		film.setTitle(oldFilm.getTitle());
+		film.setGenre(oldFilm.getGenre());
+		film.setPremiere(oldFilm.getPremiere());
+		film.setRuntime(oldFilm.getRuntime());
+		film.setScore(oldFilm.getScore());
+		film.setLanguage(oldFilm.getLanguage());
 	}
 
 	@Override
-	public void deleteFilm(String songId) {
-		filmMap.remove(songId);
+	public void deleteFilm(String filmId) {
+		filmMap.remove(filmId);
 	}
 	
 }

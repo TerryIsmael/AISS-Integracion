@@ -18,7 +18,6 @@ import org.jboss.resteasy.spi.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import aiss.model.Library;
 import aiss.model.Film;
 import aiss.model.repository.MapLibraryRepository;
 import aiss.model.repository.LibraryRepository;
@@ -28,23 +27,23 @@ import java.util.Collection;
 
 
 
-@Path("/songs")
+@Path("/films")
 public class FilmResource {
 
 	public static FilmResource _instance=null;
 	LibraryRepository repository;
-	
+
 	private FilmResource(){
 		repository=MapLibraryRepository.getInstance();
 	}
-	
+
 	public static FilmResource getInstance()
 	{
 		if(_instance==null)
 			_instance=new FilmResource();
 		return _instance; 
 	}
-	
+
 	@GET
 	@Produces("application/json")
 	public Collection<Film> getAll()

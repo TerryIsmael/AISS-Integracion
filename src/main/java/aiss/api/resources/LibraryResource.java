@@ -33,7 +33,7 @@ import aiss.model.repository.LibraryRepository;
 
 
 
-@Path("/lists")
+@Path("api/libraries")
 public class LibraryResource {
 	
 	/* Singleton */
@@ -88,7 +88,7 @@ public class LibraryResource {
 		Library list = repository.getLibrary(id);
 		
 		if (list == null) {
-			throw new NotFoundException("The playlist with id="+ id +" was not found");			
+			throw new NotFoundException("The library with id="+ id +" was not found");			
 		}
 		
 		return list;
@@ -99,14 +99,14 @@ public class LibraryResource {
 	@Produces("application/json")
 	public Response addLibrary(@Context UriInfo uriInfo, Library library) {
 		if (library.getName() == null || "".equals(library.getName()))
-			throw new BadRequestException("The name of the playlist must not be null");
+			throw new BadRequestException("The name of the library must not be null");
 		
 		if (library.getFilms()!=null)
-			throw new BadRequestException("The songs property is not editable.");
+			throw new BadRequestException("The films property is not editable.");
 
 		repository.addLibrary(library);
 
-		// Builds the response. Returns the playlist the has just been added.
+		// Builds the response. Returns the library the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
 		URI uri = ub.build(library.getId());
 		ResponseBuilder resp = Response.created(uri);
@@ -120,11 +120,11 @@ public class LibraryResource {
 	public Response updateLibrary(Library library) {
 		Library oldlibrary = repository.getLibrary(library.getId());
 		if (oldlibrary == null) {
-			throw new NotFoundException("The playlist with id="+ library.getId() +" was not found");			
+			throw new NotFoundException("The library with id="+ library.getId() +" was not found");			
 		}
 		
 		if (library.getFilms()!=null)
-			throw new BadRequestException("The songs property is not editable.");
+			throw new BadRequestException("The films property is not editable.");
 		
 		// Update name
 		if (library.getName()!=null)
@@ -142,7 +142,7 @@ public class LibraryResource {
 	public Response removeLibrary(@PathParam("id") String id) {
 		Library toberemoved=repository.getLibrary(id);
 		if (toberemoved == null)
-			throw new NotFoundException("The playlist with id="+ id +" was not found");
+			throw new NotFoundException("The library with id="+ id +" was not found");
 		else
 			repository.deleteLibrary(id);
 		
@@ -151,23 +151,23 @@ public class LibraryResource {
 	
 	
 	@POST	
-	@Path("/{playlistId}/{songId}")
+	@Path("/{libraryId}/{filmId}")
 	@Consumes("text/plain")
 	@Produces("application/json")
-	public Response addFilm(@Context UriInfo uriInfo,@PathParam("playlistId") String libraryId, @PathParam("songId") String filmId)
+	public Response addFilm(@Context UriInfo uriInfo,@PathParam("libraryId") String libraryId, @PathParam("filmId") String filmId)
 	{				
 		
 		Library library = repository.getLibrary(libraryId);
 		Film film = repository.getFilm(filmId);
 		
 		if (library==null)
-			throw new NotFoundException("The playlist with id=" + libraryId + " was not found");
+			throw new NotFoundException("The library with id=" + libraryId + " was not found");
 		
 		if (film == null)
-			throw new NotFoundException("The song with id=" + filmId + " was not found");
+			throw new NotFoundException("The film with id=" + filmId + " was not found");
 		
 		if (library.getFilm(filmId)!=null)
-			throw new BadRequestException("The song is already included in the playlist.");
+			throw new BadRequestException("The film is already included in the library.");
 			
 		repository.addFilm(libraryId, filmId);		
 
@@ -181,16 +181,16 @@ public class LibraryResource {
 	
 	
 	@DELETE
-	@Path("/{playlistId}/{songId}")
-	public Response removeFilm(@PathParam("playlistId") String libraryId, @PathParam("songId") String filmId) {
+	@Path("/{libraryId}/{filmId}")
+	public Response removeFilm(@PathParam("libraryId") String libraryId, @PathParam("filmId") String filmId) {
 		Library library = repository.getLibrary(libraryId);
 		Film film = repository.getFilm(filmId);
 		
 		if (library==null)
-			throw new NotFoundException("The playlist with id=" + libraryId + " was not found");
+			throw new NotFoundException("The library with id=" + libraryId + " was not found");
 		
 		if (film == null)
-			throw new NotFoundException("The song with id=" + filmId + " was not found");
+			throw new NotFoundException("The film with id=" + filmId + " was not found");
 		
 		
 		repository.removeFilm(libraryId, filmId);		
