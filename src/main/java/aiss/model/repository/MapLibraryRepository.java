@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import aiss.model.Film;
@@ -30,12 +31,14 @@ public class MapLibraryRepository implements LibraryRepository{
 	}
 	
 	
-	//TODO Read the file
 	public void init() {
 		
 		libraryMap = new HashMap<String,Library>();
 		filmMap = new HashMap<String,Film>();
 		
+		List<Film> data= Data.lectura();
+		for (Film dato:data)
+			addFilm(dato);
 		
 	}
 	

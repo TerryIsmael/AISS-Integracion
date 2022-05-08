@@ -1,7 +1,9 @@
 package aiss.model;
 
 import java.time.Duration;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Film {
@@ -9,7 +11,7 @@ public class Film {
 	private String id;
 	private String title;
 	private String genre;
-	private Date premiere;
+	private LocalDate premiere;
 	private Duration runtime;
 	private Double score;
 	private List<String> language;
@@ -17,7 +19,7 @@ public class Film {
 	public Film() {
 	}
 
-	public Film(String title, String genre, Date premiere, Duration runtime, Double score, List<String> language) {
+	public Film(String title, String genre, LocalDate premiere, Duration runtime, Double score, List<String> language) {
 		super();
 		this.title = title;
 		this.genre = genre;
@@ -27,7 +29,7 @@ public class Film {
 		this.language = language;
 	}
 	
-	public Film(String id, String title, String genre, Date premiere, Duration runtime, Double score, List<String> language) {
+	public Film(String id, String title, String genre, LocalDate premiere, Duration runtime, Double score, List<String> language) {
 		super();
 		this.id=id;
 		this.title = title;
@@ -39,8 +41,19 @@ public class Film {
 	}
 	
 	public Film(String s) {
-	
-		
+		String[] trozos = s.split(";");
+		List<String> idiomas=new ArrayList<>();
+		String[] idiomas_arr=trozos[6].split(",");
+		for(String idioma:idiomas_arr) {
+			idiomas.add(idioma);
+		}
+		this.id = trozos[0].trim();
+		this.title = trozos[1].trim();
+		this.genre = trozos[2].trim();
+		this.premiere = LocalDate.parse(trozos[3].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		this.runtime = Duration.parse(trozos[4].trim());
+		this.score = Double.valueOf(trozos[5].trim());
+		this.language =   idiomas;
 	}
 
 	public String getId() {
@@ -67,11 +80,11 @@ public class Film {
 		this.genre = genre;
 	}
 
-	public Date getPremiere() {
+	public LocalDate getPremiere() {
 		return premiere;
 	}
 
-	public void setPremiere(Date premiere) {
+	public void setPremiere(LocalDate premiere) {
 		this.premiere = premiere;
 	}
 
@@ -99,5 +112,7 @@ public class Film {
 		this.language = language;
 	}
 
-
+	public static Film parse(String linea) {
+		return new Film(linea);
+	}
 }
