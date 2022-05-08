@@ -9,21 +9,21 @@ public interface LibraryRepository {
 	
 	
 	// Songs
-	public void addSong(Film s);
-	public Collection<Film> getAllSongs();
-	public Film getSong(String filmId);
-	public void updateSong(Film s);
-	public void deleteSong(String filmId);
+	public void addFilm(Film f);
+	public Collection<Film> getAllFilms();
+	public Film getFilm(String filmId);
+	public void updateFilm(Film f);
+	public void deleteFilm(String filmId);
 	
 	// Playlists
-	public void addPlaylist(Library p);
-	public Collection<Library> getAllPlaylists();
-	public Library getPlaylist(String playlistId);
-	public void updatePlaylist(Library p);
-	public void deletePlaylist(String playlistId);
-	public Collection<Film> getAll(String playlistId);
-	public void addSong(String playlistId, String songId);
-	public void removeSong(String playlistId, String songId); 
+	public void addLibrary(Library l);
+	public Collection<Library> getAllLibrary();
+	public Library getLibrary(String libraryId);
+	public void updateLibrary(Library l);
+	public void deleteLibrary(String libraryId);
+	public Collection<Film> getAll(String libraryId);
+	public void addFilm(String libraryId, String filmId);
+	public void removeFilm(String libraryId, String filmId); 
 
 	
 	
