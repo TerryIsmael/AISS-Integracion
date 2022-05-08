@@ -57,7 +57,7 @@ public class LibraryResource {
 	@Produces("application/json")
 	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name)
 	{
-		Collection<Library> res=repository.getAllLibrary();
+		Collection<Library> res=repository.getAllLibraries();
 		if (isEmpty!=null) {
 			if (isEmpty==true) {
 				res= res.stream().filter(x->x.getFilms().size()==0).collect(Collectors.toList());
