@@ -1,5 +1,12 @@
 package aiss.api.resources;
 
+import java.net.URI;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -7,23 +14,18 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.NotFoundException;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
 import aiss.model.Film;
-import aiss.model.repository.MapLibraryRepository;
 import aiss.model.repository.LibraryRepository;
-
-import java.net.URI;
-import java.util.Collection;
+import aiss.model.repository.MapLibraryRepository;
 
 
 
@@ -74,8 +76,8 @@ public class FilmResource {
 		if (film.getTitle() == null || "".equals(film.getTitle()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
-		if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]") || film.getPremiere().matches("[1-2][0-9][0-9][0-9]"))) 
-			throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with YYYY or dd/mm/YYYY");
+		if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]")) && !validaFecha(film.getPremiere())) 
+			throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with dd/mm/YYYY");
 		
 		repository.addFilm(film);
 
@@ -103,8 +105,8 @@ public class FilmResource {
 		
 		if (film.getPremiere()!=null) {
 			
-			if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]") || film.getPremiere().matches("[1-2][0-9][0-9][0-9]"))) 
-				throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with YYYY or dd/mm/YYYY");
+			if (!(film.getPremiere().matches("[0-3]?[0-9][-][01]?[0-9][-][1-2][0-9][0-9][0-9]")) && !validaFecha(film.getPremiere())) 
+				throw new BadRequestException(film.getPremiere() + " is not an valid Premiere value. Try with dd/mm/YYYY");
 			
 			oldfilm.setPremiere(film.getPremiere());
 		}
@@ -132,6 +134,23 @@ public class FilmResource {
 			repository.deleteFilm(filmId);
 		
 		return Response.noContent().build();
+	}
+	
+	boolean validaFecha(String data){
+		//int[] diasMes= {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+		try {
+			LocalDate fecha= LocalDate.parse(data, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		 return true;
+		}catch(DateTimeException e){
+			return false;
+		}
+//		 System.out.println(fecha);
+//	    if ( fecha.getMonthValue()==2 && fecha.getYear()%4==0 ) {
+//	    	System.out.println("#############################################################");
+//	        return fecha.getDayOfMonth()>=1 && fecha.getDayOfMonth()<=29;
+//	    }
+//	    System.out.println(fecha.getDayOfMonth()+"  "+(fecha.getDayOfMonth()<=diasMes[fecha.getMonthValue()-1])+"  "+(fecha.getDayOfMonth()>0));
+//	    return fecha.getDayOfMonth()>0 && fecha.getDayOfMonth()<=diasMes[fecha.getMonthValue()-1];
 	}
 	
 }
