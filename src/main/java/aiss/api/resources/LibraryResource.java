@@ -33,7 +33,7 @@ import aiss.model.repository.LibraryRepository;
 
 
 
-@Path("api/libraries")
+@Path("/libraries")
 public class LibraryResource {
 	
 	/* Singleton */
@@ -102,7 +102,7 @@ public class LibraryResource {
 			throw new BadRequestException("The name of the library must not be null");
 		
 		if (library.getFilms()!=null)
-			throw new BadRequestException("The films property is not editable.");
+			throw new BadRequestException("Films property is not editable by this way.");
 
 		repository.addLibrary(library);
 
@@ -124,7 +124,7 @@ public class LibraryResource {
 		}
 		
 		if (library.getFilms()!=null)
-			throw new BadRequestException("The films property is not editable.");
+			throw new BadRequestException("Films property is not editable by this way.");
 		
 		// Update name
 		if (library.getName()!=null)

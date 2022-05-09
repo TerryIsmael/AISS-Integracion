@@ -14,7 +14,8 @@ public class MapLibraryRepository implements LibraryRepository{
 	Map<String, Library> libraryMap;
 	Map<String, Film> filmMap;
 	private static MapLibraryRepository instance=null;
-	private int index=0;			
+	private int indexF=0;
+	private int indexL=0;
 	
 	
 	public static MapLibraryRepository getInstance() {
@@ -33,17 +34,29 @@ public class MapLibraryRepository implements LibraryRepository{
 		libraryMap = new HashMap<String,Library>();
 		filmMap = new HashMap<String,Film>();
 		
-		List<Film> data= Data.lectura();
-		for (Film dato:data)
-			addFilm(dato);
+		addFilms(Data.lectura_films());
+		addLibraries(Data.lectura_libraries());
+		for (int i=0;i<10;i++) {
+			for(int j=0;j<20;j++) {
+				addFilm("l"+i,"f"+((20*i)+j));
+			}
+			
+		}
 		
 	}
 	
 	@Override
 	public void addLibrary(Library lib) {
-		String id = "l" + index++;	
+		String id = "l" + indexL++;	
 		lib.setId(id);
 		libraryMap.put(id,lib);
+	}
+	
+	@Override
+	public void addLibraries(List<Library> libs) {	
+		for (Library lib:libs) {
+			addLibrary(lib);
+		}
 	}
 	
 	@Override
@@ -83,11 +96,15 @@ public class MapLibraryRepository implements LibraryRepository{
 		getLibrary(LibraryId).deleteFilm(filmId);
 	}
 
-	
+	@Override
+	public void addFilms(List<Film> films) {
+		for (Film film:films)
+			addFilm(film);
+	}
 	
 	@Override
 	public void addFilm(Film film) {
-		String id = "f" + index++;
+		String id = "f" + indexF++;
 		film.setId(id);
 		filmMap.put(id, film);
 	}

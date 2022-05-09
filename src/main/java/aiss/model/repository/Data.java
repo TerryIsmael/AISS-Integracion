@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aiss.model.Film;
+import aiss.model.Library;
 
 public class Data {
-	public static List<Film> lectura(){
+	public static List<Film> lectura_films(){
 		List<Film> res=new ArrayList<>();
 		res.add(Film.parse("Enter the Anime;Documentary;05/08/2019;58;2.5;English/Japanese"));
 		res.add(Film.parse("Dark Forces;Thriller;21/08/2020;81;2.6;Spanish"));
@@ -124,7 +125,7 @@ public class Data {
 		res.add(Film.parse("Kevin Hart's Guide to Black History;Variety show;08/02/2019;63;5.5;English"));
 		res.add(Film.parse("Love Wedding Repeat;Romantic comedy;10/04/2020;100;5.5;English"));
 		res.add(Film.parse("Mute;Science fiction/Mystery;23/02/2018;126;5.5;English"));
-		res.add(Film.parse("Òlòt?ré;Crime drama;02/10/2020;106;5.5;English"));
+		res.add(Film.parse("ï¿½lï¿½t?rï¿½;Crime drama;02/10/2020;106;5.5;English"));
 		res.add(Film.parse("Red Dot;Thriller;11/02/2021;86;5.5;Swedish"));
 		res.add(Film.parse("Ride or Die;Psychological thriller drama;15/04/2021;142;5.5;Japanese"));
 		res.add(Film.parse("Step Sisters;Comedy;19/01/2018;108;5.5;English"));
@@ -249,7 +250,7 @@ public class Data {
 		res.add(Film.parse("The Lovebirds;Romantic comedy;22/05/2020;87;6.1;English"));
 		res.add(Film.parse("The Most Hated Woman in America;Biopic;24/03/2017;92;6.1;English"));
 		res.add(Film.parse("The Perfection;Horror-thriller;24/05/2019;90;6.1;English"));
-		res.add(Film.parse("Tribhanga – Tedhi Medhi Crazy;Drama;15/01/2021;95;6.1;Hindi"));
+		res.add(Film.parse("Tribhanga ï¿½ Tedhi Medhi Crazy;Drama;15/01/2021;95;6.1;Hindi"));
 		res.add(Film.parse("Unknown Origins;Thriller;28/08/2020;96;6.1;Spanish"));
 		res.add(Film.parse("Work It;Dance comedy;07/08/2020;93;6.1;English"));
 		res.add(Film.parse("Alien Xmas;Stop Motion;20/11/2020;42;6.2;English"));
@@ -304,7 +305,7 @@ public class Data {
 		res.add(Film.parse("Ariana Grande: Excuse Me, I Love You;Concert Film;21/12/2020;97;6.4;English"));
 		res.add(Film.parse("ARQ;Science fiction/Thriller;16/09/2016;88;6.4;English"));
 		res.add(Film.parse("Birders;Documentary;25/09/2019;37;6.4;English/Spanish"));
-		res.add(Film.parse("Como Caído del Cielo;Musical comedy;24/12/2019;112;6.4;Spanish"));
+		res.add(Film.parse("Como Caï¿½do del Cielo;Musical comedy;24/12/2019;112;6.4;Spanish"));
 		res.add(Film.parse("First Match;Sports-drama;30/03/2018;102;6.4;English"));
 		res.add(Film.parse("Fractured;Thriller;11/10/2019;100;6.4;English"));
 		res.add(Film.parse("Irreplaceable You;Drama;16/02/2018;96;6.4;English"));
@@ -398,7 +399,7 @@ public class Data {
 		res.add(Film.parse("Tony Robbins: I Am Not Your Guru;Documentary;15/07/2016;116;6.7;English"));
 		res.add(Film.parse("Upstarts;Drama;18/10/2019;112;6.7;Hindi"));
 		res.add(Film.parse("22 July;Drama;10/10/2018;144;6.8;English"));
-		res.add(Film.parse("7 años;Drama;28/10/2016;76;6.8;Spanish"));
+		res.add(Film.parse("7 aï¿½os;Drama;28/10/2016;76;6.8;Spanish"));
 		res.add(Film.parse("A Futile and Stupid Gesture;Biographical/Comedy;26/01/2018;101;6.8;English"));
 		res.add(Film.parse("A Life of Speed: The Juan Manuel Fangio Story;Documentary;20/03/2020;92;6.8;Spanish"));
 		res.add(Film.parse("A Love Song for Latasha;Documentary;21/09/2020;19;6.8;English"));
@@ -594,4 +595,15 @@ public class Data {
 		res.add(Film.parse("David Attenborough: A Life on Our Planet;Documentary;04/10/2020;83;9;English"));
 		return res;
 	}
+	
+	public static List<Library> lectura_libraries(){
+		List<Library> res=new ArrayList<>();
+		for (int i=0;i<10;i++) {
+			Library l=new Library("Example"+i);
+			l.setDescription("This library is an example of a library");
+			res.add(l);
+		}
+		return res;
+	}
+	
 }
