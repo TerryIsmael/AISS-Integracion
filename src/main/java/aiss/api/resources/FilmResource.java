@@ -57,59 +57,66 @@ public class FilmResource {
 	@Produces("application/json")
 	public Film get(@PathParam("id") String filmId)
 	{
-		Film song=repository.getFilm(filmId);
+		Film film=repository.getFilm(filmId);
 		
-		if (song == null) {
-			throw new NotFoundException("The song with id="+ filmId +" was not found");			
+		if (film == null) {
+			throw new NotFoundException("The film with id="+ filmId +" was not found");			
 		}
 		
-		return song;
+		return film;
 	
 	}
 	
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addSong(@Context UriInfo uriInfo, Film film) {
+	public Response addFilm(@Context UriInfo uriInfo, Film film) {
 		if (film.getTitle() == null || "".equals(film.getTitle()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
+		if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]") || film.getPremiere().matches("[1-2][0-9][0-9][0-9]"))) 
+			throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with YYYY or dd/mm/YYYY");
+		
 		repository.addFilm(film);
 
-		// Builds the response. Returns the playlist the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
 		URI uri = ub.build(film.getId());
 		ResponseBuilder resp = Response.created(uri);
 		resp.entity(film);			
 		return resp.build();
 	}
-	
+
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updateSong(Film film) {
-		Film oldsong = repository.getFilm(film.getId());
-		if (oldsong == null) {
-			throw new NotFoundException("The song with id="+ film.getId() +" was not found");			
+	public Response updateFilm(Film film) {
+		Film oldfilm = repository.getFilm(film.getId());
+		if (oldfilm == null) {
+			throw new NotFoundException("The film with id="+ film.getId() +" was not found");			
 		}
 		
 		if (film.getTitle()!=null)
-			oldsong.setTitle(film.getTitle());
+			oldfilm.setTitle(film.getTitle());
 		
 		if (film.getGenre()!=null)
-			oldsong.setGenre(film.getGenre());
+			oldfilm.setGenre(film.getGenre());
 		
-		if (film.getPremiere()!=null)
-			oldsong.setPremiere(film.getPremiere());
+		if (film.getPremiere()!=null) {
+			
+			if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]") || film.getPremiere().matches("[1-2][0-9][0-9][0-9]"))) 
+				throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with YYYY or dd/mm/YYYY");
+			
+			oldfilm.setPremiere(film.getPremiere());
+		}
 		
 		if (film.getRuntime()!=null)
-			oldsong.setRuntime(film.getRuntime());
+			oldfilm.setRuntime(film.getRuntime());
 		
 		if (film.getScore()!=null)
-			oldsong.setScore(film.getScore());
+			oldfilm.setScore(film.getScore());
 		
 		if (film.getRuntime()!=null)
-			oldsong.setLanguage(film.getLanguage());
+			oldfilm.setLanguage(film.getLanguage());
 
 		
 		return Response.noContent().build();
@@ -117,7 +124,7 @@ public class FilmResource {
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removeSong(@PathParam("id") String filmId) {
+	public Response removeFilm(@PathParam("id") String filmId) {
 		Film toberemoved=repository.getFilm(filmId);
 		if (toberemoved == null)
 			throw new NotFoundException("The playlist with id="+ filmId +" was not found");
