@@ -4,25 +4,25 @@ servers:
 info:
   description: Modify this information
   version: 1.0.0
-  title: Playlist_Music_API_AISS - Modify this information
-  contact:
-    email: you@your-company.com
+  title: Netflix Database Film Api
+  contact: 
+    email: 
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-  - name: songs
-    description: Songs
-  - name: lists
-    description: Playlists
+  - name: Films
+    description: Films we can find in Netflix
+  - name: Library
+    description: A place to save the films you love or you want to watch
 paths:
   /songs:
     get:
       tags:
-        - songs
-      summary: Get songs
-      description: Get all songs
-      operationId: getSongs
+        - films
+      summary: Get all films
+      description: You will get every film you are able to watch from Netflix
+      operationId: getFilms
       parameters:
         - name: order
           in: query
@@ -168,13 +168,13 @@ paths:
           description: Song deleted
         '404':
           description: Song not found
-  /lists:
+  /libraries:
     get:
       tags:
-        - lists
-      summary: Get playlists
-      description: Get all playlists
-      operationId: getPlaylists
+        - libraries
+      summary: Get all libraries
+      description: Get all libraries every user has created
+      operationId: getLibraries
       parameters:
         - name: order
           in: query
