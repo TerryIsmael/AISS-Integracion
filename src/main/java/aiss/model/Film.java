@@ -1,6 +1,9 @@
 package aiss.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Film {
@@ -85,6 +88,10 @@ public class Film {
 
 	public void setPremiere(String premiere) {
 		this.premiere = premiere;
+	}
+	
+	public LocalDate parsePremiere() {
+		return LocalDate.parse(this.premiere, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 	}
 
 	public Integer getRuntime() {
