@@ -10,6 +10,10 @@ public class Library {
 	private String description;
 	private List<Film> films;
 	
+	public Library() {
+		
+	}
+	
 	public Library(String name) {
 		this.name = name;
 	}

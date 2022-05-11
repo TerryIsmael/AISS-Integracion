@@ -1,6 +1,9 @@
 package aiss.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Film {
@@ -49,12 +52,12 @@ public class Film {
 		this.title = trozos[0].trim();
 		this.genre = trozos[1].trim();
 		//this.premiere = LocalDate.parse(trozos[2].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		this.premiere = trozos[2].trim();
+		this.premiere = trozos[2].trim().replace("/", "-");
 		this.runtime = Integer.valueOf(trozos[3].trim());
 		this.score = Double.valueOf(trozos[4].trim());
 		this.language =   idiomas;
 	}
-
+	
 	public String getId() {
 		return id;
 	}
@@ -85,6 +88,10 @@ public class Film {
 
 	public void setPremiere(String premiere) {
 		this.premiere = premiere;
+	}
+	
+	public LocalDate parsePremiere() {
+		return LocalDate.parse(this.premiere, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 	}
 
 	public Integer getRuntime() {
