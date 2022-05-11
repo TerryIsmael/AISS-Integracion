@@ -1,9 +1,10 @@
 package aiss.api.resources;
 
 import java.net.URI;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -12,22 +13,22 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.NotFoundException;
 
-import aiss.model.Library;
 import aiss.model.Film;
-import aiss.model.repository.MapLibraryRepository;
+import aiss.model.Library;
 import aiss.model.repository.LibraryRepository;
+import aiss.model.repository.MapLibraryRepository;
 
 
 
@@ -126,13 +127,33 @@ public class LibraryResource {
 		if (library.getFilms()!=null)
 			throw new BadRequestException("Films property is not editable by this way.");
 		
-		// Update name
 		if (library.getName()!=null)
 			oldlibrary.setName(library.getName());
 		
-		// Update description
 		if (library.getDescription()!=null)
 			oldlibrary.setDescription(library.getDescription());
+		
+		return Response.noContent().build();
+	}
+	
+	
+	@PUT
+	@Path("/{myId}/{copyId}")
+	public Response updateLibrary(@PathParam("myId") String myId,@PathParam("copyId") String copyId) {
+		Library myLibrary = repository.getLibrary(myId);
+		Library copyLibrary = repository.getLibrary(copyId);
+		
+		if (myLibrary == null) {
+			throw new NotFoundException("The library with id="+ myId +" was not found");			
+		}
+		
+		if (copyLibrary == null) {
+			throw new NotFoundException("The library with id="+ copyId +" was not found");			
+		}
+		List<Film> newFilms=myLibrary.getFilms();
+		newFilms.addAll(copyLibrary.getFilms());
+		myLibrary.setFilms(newFilms);
+		repository.updateLibrary(myLibrary);
 		
 		return Response.noContent().build();
 	}
@@ -184,17 +205,21 @@ public class LibraryResource {
 	@Path("/{libraryId}/{filmId}")
 	public Response removeFilm(@PathParam("libraryId") String libraryId, @PathParam("filmId") String filmId) {
 		Library library = repository.getLibrary(libraryId);
-		Film film = repository.getFilm(filmId);
-		
-		if (library==null)
-			throw new NotFoundException("The library with id=" + libraryId + " was not found");
-		
-		if (film == null)
-			throw new NotFoundException("The film with id=" + filmId + " was not found");
-		
-		
-		repository.removeFilm(libraryId, filmId);		
-		
+		if(!filmId.equals("*")) {
+			Film film = repository.getFilm(filmId);
+			
+			if (library==null)
+				throw new NotFoundException("The library with id=" + libraryId + " was not found");
+			
+			if (film == null)
+				throw new NotFoundException("The film with id=" + filmId + " was not found");
+			
+			
+			repository.removeFilm(libraryId, filmId);		
+		}else {
+			library.setFilms(new ArrayList<>());
+			repository.updateLibrary(library);
+		}
 		return Response.noContent().build();
 	}
 }

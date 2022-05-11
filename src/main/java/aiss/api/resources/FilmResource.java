@@ -5,6 +5,9 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -31,6 +35,8 @@ import aiss.model.repository.MapLibraryRepository;
 
 @Path("/films")
 public class FilmResource {
+	
+	public static Predicate<String> p1=v-> v == null || "".equals(v);
 
 	public static FilmResource _instance=null;
 	LibraryRepository repository;
@@ -47,11 +53,84 @@ public class FilmResource {
 	}
 
 	@GET
-	@Produces("application/json")
-	public Collection<Film> getAll()
-	{
-		return repository.getAllFilms();
-	}
+    @Produces("application/json")
+    public Collection<Film> getAll(@QueryParam("sort") String sort,@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
+    		@QueryParam("title") String title, @QueryParam("genre") String genre, @QueryParam("premiere") String premiere,
+            @QueryParam("runtime") Integer runtime, @QueryParam("score") String score, @QueryParam("language") String language){    
+		Collection<Film>  res= repository.getAllFilms();
+		
+		if ( title != null) {
+            res = res.stream().filter(x -> x.getTitle().contains(title)).collect(Collectors.toList());
+        } 
+        if (genre != null) {
+            res = res.stream().filter(x -> x.getGenre().equals(genre)).collect(Collectors.toList());
+        }
+        if (premiere != null) {
+        	if(premiere.matches("[0-3]?[1-9][/-][01]?[1-9][/-][12][0-9][0-9][0-9]")) {
+        		res = res.stream().filter(x -> x.getPremiere().equals(premiere)).collect(Collectors.toList());
+            }else if(premiere.matches("[12][0-9][0-9][0-9]")) {
+            	res = res.stream().filter(x-> x.getPremiere().split("-")[2].equals(premiere)).collect(Collectors.toList());
+            }else {
+            	throw new BadRequestException("Illegal query parameter: premiere. This must have the format dd-m-YYYY or YYYY");		
+            }
+        }
+        if (runtime != null) {
+        	if(runtime>=0) {
+        		res = res.stream().filter(x -> x.getRuntime().equals(runtime)).collect(Collectors.toList());
+        	}else {
+        		throw new BadRequestException("Illegal query parameter: runtime. Its value cannot be negative");	
+			}
+        }
+		
+		if (score != null) {
+			if(score.matches("[0-9.]+[-][0-9.]+")) {
+	            String[] trozos = score.split("-");
+	            Double rangoInferior = Double.valueOf(trozos[0].trim());
+	            Double rangoSuperior = Double.valueOf(trozos[1].trim());
+	            res = res.stream().filter(x -> x.getScore() <= rangoSuperior && x.getScore() >= rangoInferior).collect(Collectors.toList());
+			}else {
+				throw new BadRequestException("Query parameter: score. Its value is not set properly. try -> X-X. Example: 2.5-4 ");	
+			}
+		}
+		
+		if (language != null) {
+            res = res.stream().filter(x -> x.getLanguage().contains(language)).collect(Collectors.toList());
+        }
+		
+		if (!p1.test(sort)) {
+	        if(sort.equals("score")) {
+	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getScore).reversed()).collect(Collectors.toList());
+	        } else if(sort.equals("-score")) {
+	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getScore)).collect(Collectors.toList());
+	        } else if(sort.equals("date")) {
+	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::parsePremiere).reversed()).collect(Collectors.toList());
+	        } else if(sort.equals("-date")) {
+	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::parsePremiere)).collect(Collectors.toList());
+	        } else if(sort.equals("title")) {
+	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getTitle)).collect(Collectors.toList());
+	        } else if(sort.equals("-title")) {
+	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getTitle).reversed()).collect(Collectors.toList());
+	        } else if(sort.equals("runtime")) {
+	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getRuntime).reversed()).collect(Collectors.toList());
+	        } else if(sort.equals("-runtime")) {
+	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getRuntime)).collect(Collectors.toList());
+	        } else {
+	            throw new BadRequestException("Query parameter: sort. Its value is not set properly. try -> 'score', '-score', 'date', '-date', 'title', '-title', 'runtime', '-runtime'");
+	        }
+		}
+		
+		if(offset!=null || limit != null)
+	        if(offset!=null && limit != null && limit>=0 && offset>=0) {
+	        		res = res.stream().collect(Collectors.toList()).subList(offset, offset+limit);	
+	        }else if(offset!= null && limit == null && offset>=0) {
+		           res= res.stream().collect(Collectors.toList()).subList(offset, res.size());
+	        } else if(offset == null && limit != null && limit>=0) {
+		            res= res.stream().collect(Collectors.toList()).subList(0, limit);
+	        }else {
+	        		throw new BadRequestException("Illegal query parameters: Offset and limit values cannot be negative");	
+	        }
+		return res;
+    }
 	
 	
 	@GET
@@ -73,7 +152,7 @@ public class FilmResource {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Response addFilm(@Context UriInfo uriInfo, Film film) {
-		if (film.getTitle() == null || "".equals(film.getTitle()))
+		if (p1.test(film.getTitle()))
 			throw new BadRequestException("The name of the playlist must not be null");
 		
 		if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]")) && !validaFecha(film.getPremiere())) 
@@ -137,20 +216,12 @@ public class FilmResource {
 	}
 	
 	boolean validaFecha(String data){
-		//int[] diasMes= {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 		try {
-			LocalDate fecha= LocalDate.parse(data, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		 return true;
 		}catch(DateTimeException e){
 			return false;
 		}
-//		 System.out.println(fecha);
-//	    if ( fecha.getMonthValue()==2 && fecha.getYear()%4==0 ) {
-//	    	System.out.println("#############################################################");
-//	        return fecha.getDayOfMonth()>=1 && fecha.getDayOfMonth()<=29;
-//	    }
-//	    System.out.println(fecha.getDayOfMonth()+"  "+(fecha.getDayOfMonth()<=diasMes[fecha.getMonthValue()-1])+"  "+(fecha.getDayOfMonth()>0));
-//	    return fecha.getDayOfMonth()>0 && fecha.getDayOfMonth()<=diasMes[fecha.getMonthValue()-1];
 	}
 	
 }

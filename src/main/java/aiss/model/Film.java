@@ -11,7 +11,6 @@ public class Film {
 	private String id;
 	private String title;
 	private String genre;
-	//private LocalDate premiere;
 	private String premiere;
 	private Integer runtime;
 	private Double score;

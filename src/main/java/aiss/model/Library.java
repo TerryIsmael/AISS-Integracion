@@ -18,8 +18,8 @@ public class Library {
 		this.name = name;
 	}
 	
-	protected void setFilms(List<Film> s) {
-		films = s;
+	public void setFilms(List<Film> s) {
+		this.films = s;
 	}
 	
 	public String getId() {
@@ -81,5 +81,4 @@ public class Library {
 			films.remove(f);
 	}
 	
-
 }
