@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -126,13 +127,33 @@ public class LibraryResource {
 		if (library.getFilms()!=null)
 			throw new BadRequestException("Films property is not editable by this way.");
 		
-		// Update name
 		if (library.getName()!=null)
 			oldlibrary.setName(library.getName());
 		
-		// Update description
 		if (library.getDescription()!=null)
 			oldlibrary.setDescription(library.getDescription());
+		
+		return Response.noContent().build();
+	}
+	
+	
+	@PUT
+	@Path("/{myId}/{copyId}")
+	public Response updateLibrary(@PathParam("myId") String myId,@PathParam("copyId") String copyId) {
+		Library myLibrary = repository.getLibrary(myId);
+		Library copyLibrary = repository.getLibrary(copyId);
+		
+		if (myLibrary == null) {
+			throw new NotFoundException("The library with id="+ myId +" was not found");			
+		}
+		
+		if (copyLibrary == null) {
+			throw new NotFoundException("The library with id="+ copyId +" was not found");			
+		}
+		List<Film> newFilms=myLibrary.getFilms();
+		newFilms.addAll(copyLibrary.getFilms());
+		myLibrary.setFilms(newFilms);
+		repository.updateLibrary(myLibrary);
 		
 		return Response.noContent().build();
 	}

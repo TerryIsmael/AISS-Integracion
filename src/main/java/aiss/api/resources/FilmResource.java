@@ -55,7 +55,7 @@ public class FilmResource {
 	@GET
     @Produces("application/json")
     public Collection<Film> getAll(@QueryParam("sort") String sort,@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
-    		@QueryParam("range") String range, @QueryParam("title") String title, @QueryParam("genre") String genre, @QueryParam("premiere") String premiere,
+    		@QueryParam("title") String title, @QueryParam("genre") String genre, @QueryParam("premiere") String premiere,
             @QueryParam("runtime") Integer runtime, @QueryParam("score") String score, @QueryParam("language") String language){    
 		Collection<Film>  res= repository.getAllFilms();
 		
@@ -66,10 +66,20 @@ public class FilmResource {
             res = res.stream().filter(x -> x.getGenre().equals(genre)).collect(Collectors.toList());
         }
         if (premiere != null) {
-            res = res.stream().filter(x -> x.getPremiere().equals(premiere)).collect(Collectors.toList());
+        	if(premiere.matches("[0-3]?[1-9][/-][01]?[1-9][/-][12][0-9][0-9][0-9]")) {
+        		res = res.stream().filter(x -> x.getPremiere().equals(premiere)).collect(Collectors.toList());
+            }else if(premiere.matches("[12][0-9][0-9][0-9]")) {
+            	res = res.stream().filter(x-> x.getPremiere().split("-")[2].equals(premiere)).collect(Collectors.toList());
+            }else {
+            	throw new BadRequestException("Illegal query parameter: premiere. This must have the format dd-m-YYYY or YYYY");		
+            }
         }
         if (runtime != null) {
-            res = res.stream().filter(x -> x.getRuntime().equals(runtime)).collect(Collectors.toList());
+        	if(runtime>=0) {
+        		res = res.stream().filter(x -> x.getRuntime().equals(runtime)).collect(Collectors.toList());
+        	}else {
+        		throw new BadRequestException("Illegal query parameter: runtime. Its value cannot be negative");	
+			}
         }
 		
 		if (score != null) {
@@ -109,14 +119,17 @@ public class FilmResource {
 	        }
 		}
 		
-        if(offset!=null && limit != null) {
-            res = res.stream().collect(Collectors.toList()).subList(offset, offset+limit);
-        } else if(offset!= null && limit == null) {
-            res= res.stream().collect(Collectors.toList()).subList(offset, res.size());
-        } else if(offset == null && limit != null) {
-            res= res.stream().collect(Collectors.toList()).subList(0, limit);
-        }
-        return res;
+		if(offset!=null || limit != null)
+	        if(offset!=null && limit != null && limit>=0 && offset>=0) {
+	        		res = res.stream().collect(Collectors.toList()).subList(offset, offset+limit);	
+	        }else if(offset!= null && limit == null && offset>=0) {
+		           res= res.stream().collect(Collectors.toList()).subList(offset, res.size());
+	        } else if(offset == null && limit != null && limit>=0) {
+		            res= res.stream().collect(Collectors.toList()).subList(0, limit);
+	        }else {
+	        		throw new BadRequestException("Illegal query parameters: Offset and limit values cannot be negative");	
+	        }
+		return res;
     }
 	
 	
