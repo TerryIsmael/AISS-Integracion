@@ -42,7 +42,7 @@ public class Film {
 	public Film(String s) {
 		String[] trozos = s.split(";");
 		List<String> idiomas=new ArrayList<>();
-		String[] idiomas_arr=trozos[5].split(",");
+		String[] idiomas_arr=trozos[5].split("/");
 		for(String idioma:idiomas_arr) {
 			idiomas.add(idioma);
 		}
