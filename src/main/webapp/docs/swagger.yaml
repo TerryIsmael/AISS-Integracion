@@ -2,47 +2,51 @@ openapi: 3.0.0
 servers:
   - url: 'http://localhost:8089/api'
 info:
-  description: Modify this information
+  description: Create your own film libraries
   version: 1.0.0
-  title: Netflix Database Film Api
+  title: FilmLibraryAPI
   contact: 
     email: 
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-  - name: Films
+  - name: films
     description: Films we can find in Netflix
-  - name: Library
+  - name: library
     description: A place to save the films you love or you want to watch
 paths:
-  /songs:
+  /films:
     get:
       tags:
         - films
-      summary: Get all films
+      summary: Get all the films available
       description: You will get every film you are able to watch from Netflix
       operationId: getFilms
       parameters:
-        - name: order
+        - name: sort
           in: query
-          description: Order results by album, artist or year
+          description: Order resulting films by different possibilities
           required: false
           schema:
             type: string
             enum:
-              - album
-              - '-album'
-              - artist
-              - '-artist'
-              - year
-              - '-year'
-        - name: q
+              - score
+              - '-score'
+              - date
+              - '-date'
+              - title
+              - '-title'
+              - runtime
+              - '-runtime'
+        - name: offset
           in: query
-          description: Query to filter
+          description: Offset of the results 
           required: false
           schema:
-            type: string
+            type: integer
+            format: int32
+            minimun: 0
         - name: limit
           in: query
           description:  Maximum number of results
@@ -51,14 +55,38 @@ paths:
             type: integer
             format: int32
             minimum: 0
-        - name: offset
+        - name: score
           in: query
-          description: Offset of the results
-          required: false
+          description: Range of score of the results 
           schema:
-            type: integer
+            type: string
+        - name: title
+          in: query
+          description: Filter by matching title 
+          schema:
+            type: string
+        - name: genre
+          in: query
+          description: Filter by matching genre 
+          schema:
+            type: string
+        - name: runtime
+          in: query
+          description: Filter by matching runtime 
+          schema:
+            type: Integer
             format: int32
-            minimum: 0
+            minimun: 0
+        - name: premiere
+          in: query
+          description: Filter by matching premiere date, format ('dd-MM-YYYY')
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: Filter by matching language 
+          schema:
+            type: string
       responses:
         '200':
           description: Search results matching criteria
@@ -75,26 +103,34 @@ paths:
                       type: string
                     title:
                       type: string
-                    artist:
+                    genre:
                       type: string
-                    album:
+                    premiere:
                       type: string
-                    year:
-                      type: string
+                    runtime:
+                      type: integer
+                    score: 
+                      type: double
+                    language:
+                      type: array
+                      items:
+                        type: string
                   example:
-                    id: s1
-                    title: Rolling in the Deep
-                    artist: Adele
-                    album: '21'
-                    year: '2011'
+                    id: f500
+                    title: 'El Camino: A Breaking Bad Movie'
+                    genre: 'Crime drama'
+                    premiere: '11-10-2019'
+                    runtime: 121
+                    score: 7.3
+                    language: ['English']
         '400':
           description: Bad request
     post:
       tags:
-        - songs
-      summary: Create a song
-      description: Create a song
-      operationId: createSong
+        - films
+      summary: Upload film information
+      description: You can upload film information not in our database
+      operationId: createFilm
       requestBody:
         content:
           application/json:
@@ -102,72 +138,97 @@ paths:
               type: object
               required:
                 - title
+                - genre
+                - premiere
+                - runtime
+                - score
+                - language
               properties:
                 id:
                   type: string
                 title:
                   type: string
-                artist:
+                genre:
                   type: string
-                album:
+                premiere:
                   type: string
-                year:
-                  type: string
+                runtime:
+                  type: integer
+                score: 
+                  type: double
+                language:
+                  type: array
+                  items:
+                    type: string
               example:
-                id: s1
-                title: Rolling in the Deep
-                artist: Adele
-                album: '21'
-                year: '2011'
-        description: Song to create
+                title: 'El Camino: A Breaking Bad Movie'
+                genre: 'Crime drama'
+                premiere: '11-10-2019'
+                runtime: 121
+                score: 7.3
+                language: ['English']
+        description: Film information to upload
         required: true
       responses:
         '201':
-          description: Song created
+          description: Film information uploaded
           content:
             application/json:
               schema:
                 type: object
                 required:
                   - title
-                properties:
-                  id:
+                  - genre
+                  - premiere
+                  - runtime
+                  - score
+                  - language
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                genre:
+                  type: string
+                premiere:
+                  type: string
+                runtime:
+                  type: integer
+                score: 
+                  type: double
+                language:
+                  type: array
+                  items:
                     type: string
-                  title:
-                    type: string
-                  artist:
-                    type: string
-                  album:
-                    type: string
-                  year:
-                    type: string
-                example:
-                  id: s1
-                  title: Rolling in the Deep
-                  artist: Adele
-                  album: '21'
-                  year: '2011'
+              example:
+                id: f500
+                title: 'El Camino: A Breaking Bad Movie'
+                genre: 'Crime drama'
+                premiere: '11-10-2019'
+                runtime: 121
+                score: 7.3
+                language: ['English']
         '400':
           description: Bad request
-  '/songs/{id}':
+  '/films/{id}':
     delete:
       tags:
-        - songs
-      summary: Delete song
-      description: Delete song
-      operationId: deleteSong
+        - films
+      summary: Delete a film information
+      description: Delete any film information from the database
+      operationId: deleteFilm
       parameters:
         - name: id
           in: path
-          description: Id of the song
+          description: Id of the film
           required: true
           schema:
             type: string
       responses:
         '204':
-          description: Song deleted
+          description: film deleted
         '404':
-          description: Song not found
+          description: film not found
   /libraries:
     get:
       tags:
