@@ -5,6 +5,7 @@ import java.util.List;
 
 import aiss.model.Film;
 import aiss.model.Library;
+import aiss.model.User;
 
 public class Data {
 	public static List<Film> lectura_films(){
@@ -604,6 +605,9 @@ public class Data {
 			res.add(l);
 		}
 		return res;
+	}
+	public static User lectura_users() {
+		return new User("admin","admin");
 	}
 	
 }

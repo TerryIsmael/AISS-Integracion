@@ -7,12 +7,15 @@ import java.util.Map;
 
 import aiss.model.Film;
 import aiss.model.Library;
+import aiss.model.TokenGen;
+import aiss.model.User;
 
 
 public class MapLibraryRepository implements LibraryRepository{
 
 	Map<String, Library> libraryMap;
 	Map<String, Film> filmMap;
+	Map<String, User> userMap;
 	private static MapLibraryRepository instance=null;
 	private int indexF=0;
 	private int indexL=0;
@@ -33,7 +36,7 @@ public class MapLibraryRepository implements LibraryRepository{
 		
 		libraryMap = new HashMap<String,Library>();
 		filmMap = new HashMap<String,Film>();
-		
+		userMap = new HashMap<String, User>();
 		addFilms(Data.lectura_films());
 		addLibraries(Data.lectura_libraries());
 		for (int i=0;i<10;i++) {
@@ -42,7 +45,28 @@ public class MapLibraryRepository implements LibraryRepository{
 			}
 			
 		}
-		
+		addUser(Data.lectura_users());
+	}
+	@Override
+	public void addUser(User user) {
+		String token=TokenGen.RandomToken();
+		user.setToken(token);
+		userMap.put(token, user);
+	}
+	
+	@Override
+	public Collection<User> getAllUsers() {
+		return userMap.values();
+	}
+	
+	@Override
+	public void updateUser(User user) {
+		userMap.put(user.getToken(), user);
+	}
+	
+	@Override
+	public void deleteUser(User user) {
+		userMap.remove(user.getToken());
 	}
 	
 	@Override
