@@ -89,7 +89,7 @@ public class FilmResource {
 	            Double rangoSuperior = Double.valueOf(trozos[1].trim());
 	            res = res.stream().filter(x -> x.getScore() <= rangoSuperior && x.getScore() >= rangoInferior).collect(Collectors.toList());
 			}else {
-				throw new BadRequestException("Query parameter: score. Its value is not set properly. try -> X-X. Example: 2.5-4 ");	
+				throw new BadRequestException("Illegal query parameter: score. Its value is not set properly. try -> X-X. Example: 2.5-4 ");	
 			}
 		}
 		
@@ -99,36 +99,45 @@ public class FilmResource {
 		
 		if (!p1.test(sort)) {
 	        if(sort.equals("score")) {
-	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getScore).reversed()).collect(Collectors.toList());
+	            res= res.stream().sorted(Comparator.comparing(Film::getScore).reversed()).collect(Collectors.toList());
 	        } else if(sort.equals("-score")) {
-	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getScore)).collect(Collectors.toList());
+	            res= res.stream().sorted(Comparator.comparing(Film::getScore)).collect(Collectors.toList());
 	        } else if(sort.equals("date")) {
-	            res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::parsePremiere).reversed()).collect(Collectors.toList());
+	            res= res.stream().sorted(Comparator.comparing(Film::parsePremiere).reversed()).collect(Collectors.toList());
 	        } else if(sort.equals("-date")) {
-	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::parsePremiere)).collect(Collectors.toList());
+	        	res= res.stream().sorted(Comparator.comparing(Film::parsePremiere)).collect(Collectors.toList());
 	        } else if(sort.equals("title")) {
-	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getTitle)).collect(Collectors.toList());
+	        	res= res.stream().sorted(Comparator.comparing(Film::getTitle)).collect(Collectors.toList());
 	        } else if(sort.equals("-title")) {
-	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getTitle).reversed()).collect(Collectors.toList());
+	        	res= res.stream().sorted(Comparator.comparing(Film::getTitle).reversed()).collect(Collectors.toList());
 	        } else if(sort.equals("runtime")) {
-	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getRuntime).reversed()).collect(Collectors.toList());
+	        	res= res.stream().sorted(Comparator.comparing(Film::getRuntime).reversed()).collect(Collectors.toList());
 	        } else if(sort.equals("-runtime")) {
-	        	res= repository.getAllFilms().stream().sorted(Comparator.comparing(Film::getRuntime)).collect(Collectors.toList());
+	        	res= res.stream().sorted(Comparator.comparing(Film::getRuntime)).collect(Collectors.toList());
 	        } else {
 	            throw new BadRequestException("Query parameter: sort. Its value is not set properly. try -> 'score', '-score', 'date', '-date', 'title', '-title', 'runtime', '-runtime'");
 	        }
 		}
 		
-		if(offset!=null || limit != null)
-	        if(offset!=null && limit != null && limit>=0 && offset>=0) {
-	        		res = res.stream().collect(Collectors.toList()).subList(offset, offset+limit);	
-	        }else if(offset!= null && limit == null && offset>=0) {
-		           res= res.stream().collect(Collectors.toList()).subList(offset, res.size());
-	        } else if(offset == null && limit != null && limit>=0) {
-		            res= res.stream().collect(Collectors.toList()).subList(0, limit);
+		if(offset!=null || limit != null) {
+			if(offset == null && limit != null && limit>=0) {
+		       	Integer newLimit=limit<res.size()?limit:res.size();
+		       	res= res.stream().limit(newLimit).collect(Collectors.toList());
+	        }else if(offset!=null) {
+	        	if(limit != null && limit>=0 && offset>=0) {
+		        	Integer newLimit=limit<res.size()-offset?limit:res.size()-offset;
+		        	Integer newOffset=offset<res.size()?offset:res.size();
+		        	res = res.stream().collect(Collectors.toList()).subList(newOffset, offset+newLimit);	
+		        }else if(limit == null && offset>=0) {
+		        	Integer newOffset=offset<res.size()?offset:res.size();
+		        	res= res.stream().collect(Collectors.toList()).subList(newOffset, res.size());    
+		        }else {
+	        	throw new BadRequestException("Illegal query parameters: Offset and limit values cannot be negative");	
+		        }
 	        }else {
-	        		throw new BadRequestException("Illegal query parameters: Offset and limit values cannot be negative");	
+	        	throw new BadRequestException("Illegal query parameters: Limit value cannot be negative");	
 	        }
+		}
 		return res;
     }
 	
