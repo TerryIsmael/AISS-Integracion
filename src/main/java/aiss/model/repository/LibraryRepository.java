@@ -5,6 +5,7 @@ import java.util.List;
 
 import aiss.model.Film;
 import aiss.model.Library;
+import aiss.model.User;
 
 public interface LibraryRepository {
 	
@@ -25,7 +26,11 @@ public interface LibraryRepository {
 	public void deleteLibrary(String libraryId);
 	public Collection<Film> getAll(String libraryId);
 	public void addFilm(String libraryId, String filmId);
-	public void removeFilm(String libraryId, String filmId); 
+	public void removeFilm(String libraryId, String filmId);
+	public void addUser(User user);
+	public Collection<User> getAllUsers();
+	void updateUser(User user);
+	void deleteUser(User user); 
 
 
 	

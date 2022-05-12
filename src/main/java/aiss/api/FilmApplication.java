@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 import aiss.api.resources.LibraryResource;
+import aiss.api.resources.UserResource;
 import aiss.api.resources.FilmResource;
 
 
@@ -18,6 +19,7 @@ public class FilmApplication extends Application {
 
 		singletons.add(LibraryResource.getInstance());
 		singletons.add(FilmResource.getInstance());
+		singletons.add(UserResource.getInstance());
 	}
 
 	@Override
