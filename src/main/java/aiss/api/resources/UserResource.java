@@ -76,7 +76,7 @@ public class UserResource {
 			throw new BadRequestException("The username or password cannot contain blank spaces");
 		}
 		if(repository.getAllUsers().stream().anyMatch(x->x.getName().equals(user.getName()))) {
-			throw new BadRequestException("This username is already in user");
+			throw new BadRequestException("This username is already in use");
 		}
 		repository.addUser(user);
 		
@@ -100,7 +100,7 @@ public class UserResource {
 		Collection<User> users = repository.getAllUsers();
 		User respUser = users.stream().filter(x->x.getName().equals(user.getName())).findFirst().orElse(null);
 		if (p2.test(respUser)) {
-			throw new BadRequestException("The user"+ user.getName()+"does not exist");
+			throw new BadRequestException("The user "+ user.getName()+" does not exist");
 		} else if(!respUser.getPassword().equals(user.getPassword())) {
 			throw new BadRequestException("The password is incorrect");
 		}
