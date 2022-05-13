@@ -136,6 +136,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
+        example: 7
       - name: limit
         in: query
         description: Maximum number of results
@@ -146,6 +147,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
+        example: 10
       - name: score
         in: query
         description: Range of score of the results
@@ -156,6 +158,7 @@ paths:
           maximum: 10
           minimum: 0
           type: string
+        example: '7.0-10.0'
       - name: title
         in: query
         description: Filter by matching title
@@ -164,6 +167,7 @@ paths:
         explode: true
         schema:
           type: string
+        example: 'El Camino'
       - name: genre
         in: query
         description: Filter by matching genre
@@ -172,6 +176,7 @@ paths:
         explode: true
         schema:
           type: string
+        example: Action
       - name: runtime
         in: query
         description: Filter by matching runtime
@@ -182,6 +187,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
+        example: 90
       - name: premiere
         in: query
         description: Filter by matching premiere date, format ('dd-MM-YYYY')
@@ -190,6 +196,7 @@ paths:
         explode: true
         schema:
           type: string
+        example: 'date: 27-07-1999 or year: 20021'
       - name: language
         in: query
         description: Filter by matching language
@@ -198,6 +205,7 @@ paths:
         explode: true
         schema:
           type: string
+        example: Spanish
       responses:
         "200":
           description: Search results matching criteria
