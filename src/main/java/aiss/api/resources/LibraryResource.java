@@ -173,7 +173,6 @@ public class LibraryResource {
 	
 	@POST	
 	@Path("/{libraryId}/{filmId}")
-	@Consumes("text/plain")
 	@Produces("application/json")
 	public Response addFilm(@Context UriInfo uriInfo,@PathParam("libraryId") String libraryId, @PathParam("filmId") String filmId)
 	{				

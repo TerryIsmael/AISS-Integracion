@@ -388,7 +388,7 @@ paths:
       operationId: addLibrary
       requestBody:
         content:
-          text/plain:
+          application/json:
             schema:
               $ref: '#/components/schemas/libraries_body_post'
       responses:
