@@ -16,7 +16,91 @@ tags:
   description: Films we can find in Netflix
 - name: libraries
   description: A place to save the films you love or you want to watch
+- name: users
+  description: All about user authentication and token generation.
 paths:
+  /users:
+    get:
+      tags:
+      - users
+      summary: Get all usernames
+      description: Get all usernames registered in our api
+      operationId: getUsernames
+      responses:
+        "200":
+          description: All usernames registered
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: [admin, pepe]
+        "400":
+          description: Bad request  
+    post:
+      tags:
+      - users
+      summary: Create new user and token
+      description: Create a new account so you can get validation token 
+      operationId: createUser
+      requestBody:
+        description: Username and password to create account
+        content:
+          application/json:
+            schema:
+              name: string
+              password: string
+            example:
+              name: pepe
+              password: pepe1234
+        required: true
+      responses:
+        "201":
+          description: User has been created
+          content:
+            application/json:
+              schema:
+              name: string
+              password: string
+              example:
+                name: pepe
+                password: pepe1234
+                token: 1lkj04r3-asfl843-ghx872oa
+        "400":
+          description: Bad request
+  /users/login:
+    post:
+      tags:
+      - users
+      summary: Retrieve your api token
+      description: Post your user and password to get your token
+      operationId: PostLogin
+      requestBody:
+        description: Username and password to login
+        content:
+          application/json:
+            schema:
+              name: string
+              password: string
+            example:
+              name: pepe
+              password: pepe1234
+        required: true
+      responses:
+        "201":
+          description: Logged in succesfully
+          content:
+            application/json:
+              schema:
+              name: string
+              password: string
+              example:
+                name: pepe
+                password: pepe1234
+                token: 1lkj04r3-asfl843-ghx872oa
+        "400":
+          description: Bad request   
   /films:
     get:
       tags:
