@@ -446,6 +446,37 @@ paths:
           description: Library deleted
         "404":
           description: Library or film not found
+  /libraries/{myId}/{copyId}:
+   put:
+      tags:
+      - libraries
+      summary: Update a library with the films of other library
+      description: Copy the films of a library in your library
+      operationId: copyLibrary
+      parameters:
+      - name: myId
+        in: path
+        description: Id of your library
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: copyId
+        in: path
+        description: Id of the library you want to copy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Library copied
+        "400":
+          description: Bad request
+        "404":
+          description: Library not found
   /libraries/{libraryId}/{filmId}:
     post:
       tags:

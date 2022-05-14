@@ -139,7 +139,7 @@ public class LibraryResource {
 	
 	@PUT
 	@Path("/{myId}/{copyId}")
-	public Response updateLibrary(@PathParam("myId") String myId,@PathParam("copyId") String copyId) {
+	public Response copyLibrary(@PathParam("myId") String myId,@PathParam("copyId") String copyId) {
 		Library myLibrary = repository.getLibrary(myId);
 		Library copyLibrary = repository.getLibrary(copyId);
 		

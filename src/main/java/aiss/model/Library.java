@@ -6,8 +6,11 @@ import java.util.List;
 public class Library {
 
 	private String id;
+	private String userToken;
 	private String name;
 	private String description;
+	private Boolean hidden;
+	private Integer likes;
 	private List<Film> films;
 	
 	public Library() {
@@ -21,6 +24,27 @@ public class Library {
 	public void setFilms(List<Film> s) {
 		this.films = s;
 	}
+	
+	public Integer getLikes() {
+		return this.likes;
+	}
+	
+	public String getUserToken() {
+		return this.userToken;
+	}
+
+	public void addLike(Integer likes) {
+		this.likes = likes;
+	}
+	
+	public Boolean getHidden() {
+		return this.hidden;
+	}
+
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
+	}
+	
 	
 	public String getId() {
 		return id;
