@@ -79,6 +79,9 @@ public class MapLibraryRepository implements LibraryRepository{
 	@Override
 	public void addLibraries(List<Library> libs) {	
 		for (Library lib:libs) {
+			lib.setLikes(0);
+			lib.setUsername("admin");
+			lib.setHidden(false);
 			addLibrary(lib);
 		}
 	}
