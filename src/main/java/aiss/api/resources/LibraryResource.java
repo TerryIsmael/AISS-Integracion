@@ -136,7 +136,6 @@ public class LibraryResource {
 		return Response.noContent().build();
 	}
 	
-	
 	@PUT
 	@Path("/{myId}/{copyId}")
 	public Response updateLibrary(@PathParam("myId") String myId,@PathParam("copyId") String copyId) {

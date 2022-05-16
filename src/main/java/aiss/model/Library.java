@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Library {
-
 	private String id;
 	private String name;
 	private String description;
