@@ -118,7 +118,7 @@ public class LibraryResource {
 		if(isNull.test(token)) {
 			throw new BadRequestException("You need to provide a user token to complete this request. {uri}?token={yourToken}");
 		}
-		if (library.getName() == null || "".equals(library.getName()))
+		if (library.getName() == null || "".equals(library.getName().trim()))
 			throw new BadRequestException("The name of the library must not be null");
 		
 		if (library.getFilms()!=null)
