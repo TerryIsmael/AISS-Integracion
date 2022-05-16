@@ -40,8 +40,10 @@ import aiss.model.repository.MapLibraryRepository;
 @Path("/libraries")
 public class LibraryResource {
 	
-	/* Singleton */
 	public static Predicate<String> isNull=v-> v == null || "".equals(v);
+	
+	/* Singleton */
+	
 	private static LibraryResource _instance=null;
 	LibraryRepository repository;
 	
@@ -208,8 +210,8 @@ public class LibraryResource {
 		Library myLibrary = repository.getLibrary(myId);
 		Library copyLibrary = repository.getLibrary(copyId);
 		
-		if (myLibrary == null || myLibrary.getUsername().equals(user.get().getName())) {
-			throw new NotFoundException("The library with id="+ myId +" was not found or is private");			
+		if (myLibrary == null || !myLibrary.getUsername().equals(user.get().getName())) {
+			throw new NotFoundException("The library with id="+ myId +" was not found or it does not belong to you");			
 		}
 		
 		if (copyLibrary == null) {

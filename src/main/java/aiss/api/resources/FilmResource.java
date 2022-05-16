@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ import org.jboss.resteasy.spi.BadRequestException;
 import org.jboss.resteasy.spi.NotFoundException;
 
 import aiss.model.Film;
+import aiss.model.User;
 import aiss.model.repository.LibraryRepository;
 import aiss.model.repository.MapLibraryRepository;
 
@@ -36,7 +38,7 @@ import aiss.model.repository.MapLibraryRepository;
 @Path("/films")
 public class FilmResource {
 	
-	public static Predicate<String> p1=v-> v == null || "".equals(v);
+	public static Predicate<String> isNull=v-> v == null || "".equals(v);
 
 	public static FilmResource _instance=null;
 	LibraryRepository repository;
@@ -60,7 +62,7 @@ public class FilmResource {
 		Collection<Film>  res= repository.getAllFilms();
 		
 		if ( title != null) {
-            res = res.stream().filter(x -> x.getTitle().contains(title)).collect(Collectors.toList());
+            res = res.stream().filter(x -> x.getTitle().toLowerCase().contains(title.toLowerCase())).collect(Collectors.toList());
         } 
         if (genre != null) {
             res = res.stream().filter(x -> x.getGenre().equals(genre)).collect(Collectors.toList());
@@ -97,7 +99,7 @@ public class FilmResource {
             res = res.stream().filter(x -> x.getLanguage().contains(language)).collect(Collectors.toList());
         }
 		
-		if (!p1.test(sort)) {
+		if (!isNull.test(sort)) {
 	        if(sort.equals("score")) {
 	            res= res.stream().sorted(Comparator.comparing(Film::getScore).reversed()).collect(Collectors.toList());
 	        } else if(sort.equals("-score")) {
@@ -160,12 +162,23 @@ public class FilmResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addFilm(@Context UriInfo uriInfo, Film film) {
-		if (p1.test(film.getTitle()))
-			throw new BadRequestException("The name of the playlist must not be null");
+	public Response addFilm(@Context UriInfo uriInfo,@PathParam("token") String token,Film film) {
+		if(isNull.test(token)) {
+			throw new BadRequestException("Token parameter cannot be null");
+		}
+		
+		Optional<User> user = User.getNameFromToken(token, repository);
+		if(!user.isPresent()) {
+			throw new BadRequestException("Provided token is not valid");
+		}
+		
+		if (isNull.test(film.getTitle()))
+			throw new BadRequestException("The name of the library cannot be null");
 		
 		if (!(film.getPremiere().matches("[0-3]?[0-9][//][01]?[0-9][//][1-2][0-9][0-9][0-9]")) && !validaFecha(film.getPremiere())) 
 			throw new BadRequestException(film.getPremiere()+" is not an valid Premiere value. Try with dd/mm/YYYY");
+		
+		film.setUsername(user.get().getName());
 		
 		repository.addFilm(film);
 
@@ -179,10 +192,23 @@ public class FilmResource {
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updateFilm(Film film) {
+	public Response updateFilm(Film film, @PathParam("token") String token) {
 		Film oldfilm = repository.getFilm(film.getId());
 		if (oldfilm == null) {
 			throw new NotFoundException("The film with id="+ film.getId() +" was not found");			
+		}
+		
+		if(isNull.test(token)) {
+			throw new BadRequestException("Token parameter cannot be null");
+		}
+		
+		Optional<User> user = User.getNameFromToken(token, repository);
+		if(!user.isPresent()) {
+			throw new BadRequestException("Provided token is not valid");
+		}
+		
+		if(!user.get().getName().equals(oldfilm.getUsername())) {
+			throw new BadRequestException("You cannot modify a film that does not belong to you");
 		}
 		
 		if (film.getTitle()!=null)
@@ -214,12 +240,25 @@ public class FilmResource {
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removeFilm(@PathParam("id") String filmId) {
+	public Response removeFilm(@PathParam("id") String filmId, @PathParam("token") String token) {
 		Film toberemoved=repository.getFilm(filmId);
 		if (toberemoved == null)
 			throw new NotFoundException("The playlist with id="+ filmId +" was not found");
-		else
-			repository.deleteFilm(filmId);
+		
+		if(isNull.test(token)) {
+			throw new BadRequestException("Token parameter cannot be null");
+		}
+		
+		Optional<User> user = User.getNameFromToken(token, repository);
+		if(!user.isPresent()) {
+			throw new BadRequestException("Provided token is not valid");
+		}
+		
+		if(!user.get().getName().equals(toberemoved.getUsername())) {
+			throw new BadRequestException("You cannot modify a film that does not belong to you");
+		}
+		
+		repository.deleteFilm(filmId);
 		
 		return Response.noContent().build();
 	}

@@ -594,6 +594,9 @@ public class Data {
 		res.add(Film.parse("Springsteen on Broadway;One-man show;16/12/2018;153;8.5;English"));
 		res.add(Film.parse("Emicida: AmarElo - It's All For Yesterday;Documentary;08/12/2020;89;8.6;Portuguese"));
 		res.add(Film.parse("David Attenborough: A Life on Our Planet;Documentary;04/10/2020;83;9;English"));
+		for(Film r:res) {
+			r.setUsername("admin");
+		}
 		return res;
 	}
 	
@@ -602,6 +605,7 @@ public class Data {
 		for (int i=0;i<10;i++) {
 			Library l=new Library("Example"+i);
 			l.setDescription("This library is an example of a library");
+			l.setUsername("admin");
 			res.add(l);
 		}
 		return res;

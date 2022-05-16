@@ -224,6 +224,15 @@ paths:
       summary: Update a film information
       description: Update any film information from the database
       operationId: putFilm
+      parameters: 
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -240,8 +249,17 @@ paths:
       tags:
       - films
       summary: Upload film information
-      description: You can upload film information not in our database
+      description: You can upload film information which is not in our database
       operationId: createFilm
+      parameters: 
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       requestBody:
         description: Film information to upload
         content:
@@ -301,6 +319,14 @@ paths:
       description: Delete any film information from the database
       operationId: deleteFilm
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: id
         in: path
         description: Id of the film
@@ -322,6 +348,14 @@ paths:
       description: Get all libraries created
       operationId: getLibraries
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: order
         in: query
         description: Order results by name
@@ -366,6 +400,15 @@ paths:
       summary: Update a library
       description: Update a library
       operationId: updateLibrary
+      parameters: 
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       requestBody:
         description: Library to update
         content:
@@ -386,6 +429,15 @@ paths:
       summary: Add a library
       description: Add a library
       operationId: addLibrary
+      parameters: 
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -408,6 +460,14 @@ paths:
       description: Get a library
       operationId: getLibrary
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: id
         in: path
         description: Id of the library
@@ -433,6 +493,14 @@ paths:
       description: Delete library
       operationId: deleteLibrary
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: id
         in: path
         description: Id of the library
@@ -454,6 +522,14 @@ paths:
       description: Copy the films of a library in your library
       operationId: copyLibrary
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: myId
         in: path
         description: Id of your library
@@ -485,6 +561,14 @@ paths:
       description: Add film to library
       operationId: addFilmToLibrary
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: libraryId
         in: path
         description: Id of the library
@@ -519,6 +603,14 @@ paths:
       description: Delete film from library
       operationId: deleteFilmFromLibrary
       parameters:
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       - name: libraryId
         in: path
         description: Id of the library

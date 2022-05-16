@@ -3,7 +3,6 @@ package aiss.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Film {
@@ -15,6 +14,7 @@ public class Film {
 	private Integer runtime;
 	private Double score;
 	private List<String> language;
+	private String username;
 	
 	public Film() {
 		
@@ -64,7 +64,15 @@ public class Film {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public String getUsername() {
+		return username;
+	}
 
+	public void setUsername(String username) {
+		this.username=username;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
