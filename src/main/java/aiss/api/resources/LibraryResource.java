@@ -168,6 +168,9 @@ public class LibraryResource {
 			throw new NotFoundException("The user token is invalid");
 		}
 		library.addRemoveLikes(user.get().getName());
+		
+		repository.updateLibrary(library);
+		
 		// Builds the response. Returns the library the has just been added.
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
 		URI uri = ub.build(library.getId());
@@ -213,7 +216,7 @@ public class LibraryResource {
 		if (library.getDescription()!=null)
 			oldlibrary.setDescription(library.getDescription());
 		
-		
+		repository.updateLibrary(oldlibrary);
 		
 		return Response.noContent().build();
 	}
@@ -246,6 +249,7 @@ public class LibraryResource {
 		List<Film> newFilms=myLibrary.getFilms();
 		newFilms.addAll(copyLibrary.getFilms());
 		myLibrary.setFilms(newFilms);
+		
 		repository.updateLibrary(myLibrary);
 		
 		return Response.noContent().build();
