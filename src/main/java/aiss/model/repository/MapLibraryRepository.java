@@ -10,6 +10,7 @@ import aiss.model.Library;
 import aiss.model.TokenGen;
 import aiss.model.User;
 
+
 public class MapLibraryRepository implements LibraryRepository{
 
 	Map<String, Library> libraryMap;
@@ -18,6 +19,7 @@ public class MapLibraryRepository implements LibraryRepository{
 	private static MapLibraryRepository instance=null;
 	private int indexF=0;
 	private int indexL=0;
+	
 	
 	public static MapLibraryRepository getInstance() {
 		
@@ -28,6 +30,7 @@ public class MapLibraryRepository implements LibraryRepository{
 		
 		return instance;
 	}
+	
 	
 	public void init() {
 		
@@ -76,6 +79,9 @@ public class MapLibraryRepository implements LibraryRepository{
 	@Override
 	public void addLibraries(List<Library> libs) {	
 		for (Library lib:libs) {
+			lib.setLikes(0);
+			lib.setUsername("admin");
+			lib.setHidden(false);
 			addLibrary(lib);
 		}
 	}

@@ -1,5 +1,9 @@
 package aiss.model;
 
+import java.util.Optional;
+
+import aiss.model.repository.LibraryRepository;
+
 public class User {
 	private String name;
 	private String password;
@@ -10,6 +14,7 @@ public class User {
 		this.password = password;
 		
 	}
+	
 	public User() {
 	}
 	
@@ -32,4 +37,9 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public static Optional<User> getNameFromToken(String token, LibraryRepository repository) {
+		return repository.getAllUsers().stream().filter(x->x.getToken().equals(token)).findFirst();
+	}
+	
 }
