@@ -447,7 +447,7 @@ paths:
         "404":
           description: Library or film not found
   /libraries/{myId}/{copyId}:
-   put:
+    put:
       tags:
       - libraries
       summary: Update a library with the films of other library

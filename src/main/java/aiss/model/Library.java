@@ -6,12 +6,8 @@ import java.util.List;
 public class Library {
 
 	private String id;
-	private String username;
-	private List<String> usersLike;
 	private String name;
 	private String description;
-	private Boolean hidden;
-	private Integer likes;
 	private List<Film> films;
 	
 	public Library() {
@@ -25,52 +21,6 @@ public class Library {
 	public void setFilms(List<Film> s) {
 		this.films = s;
 	}
-	
-	public Integer getLikes() {
-		return this.likes;
-	}
-	
-	public void setLikes(Integer n) {
-		likes = n;
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
-	public void setUsername(String name) {
-		username = name;
-	}
-	
-	public List<String> getUsersLike() {
-		return this.usersLike;
-	}
-	
-	public void addUserLike(String username) {
-		if(usersLike == null) {
-			usersLike = new ArrayList<String>();
-		}
-		if(!usersLike.contains(username)) {
-			usersLike.add(username);
-		}
-	}
-	
-	public void deleteUserLike(String username) {
-		usersLike.remove(username);
-	}
-
-	public void addLike(Integer likes) {
-		this.likes = likes;
-	}
-	
-	public Boolean getHidden() {
-		return this.hidden;
-	}
-
-	public void setHidden(Boolean hidden) {
-		this.hidden = hidden;
-	}
-	
 	
 	public String getId() {
 		return id;
