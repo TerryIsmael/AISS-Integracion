@@ -191,13 +191,13 @@ paths:
         example: 121
       - name: premiere
         in: query
-        description: Filter by matching premiere date, format ('dd-MM-YYYY')
+        description: Filter by matching premiere date, format ('dd-MM-YYYY') or ('YYYY')
         required: false
         style: form
         explode: true
         schema:
           type: string
-        example: 'date: 27-07-1999 or year: 20021'
+        example: '2021'
       - name: language
         in: query
         description: Filter by matching language
