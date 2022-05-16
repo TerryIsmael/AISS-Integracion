@@ -38,7 +38,7 @@ import aiss.model.repository.MapLibraryRepository;
 @Path("/films")
 public class FilmResource {
 	
-	public static Predicate<String> p1=v-> v == null || "".equals(v.trim());
+	public static Predicate<String> isNull=v-> v == null || "".equals(v.trim());
 
 	public static FilmResource _instance=null;
 	LibraryRepository repository;
