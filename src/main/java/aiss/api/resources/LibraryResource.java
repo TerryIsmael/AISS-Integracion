@@ -151,6 +151,30 @@ public class LibraryResource {
 		return resp.build();
 	}
 
+	@POST
+	@Path("/{id}")
+	@Produces("application/json")
+	public Response addLike(@Context UriInfo uriInfo, @QueryParam("token") String token, @PathParam("id") String id) {
+		if(isNull.test(token)) {
+			throw new BadRequestException("You need to provide a user token to complete this request. {uri}?token={yourToken}");
+		}
+		Library library = repository.getLibrary(id);
+		if(library==null) {
+			throw new NotFoundException("The library with id="+ id +" was not found"); 
+		}
+		Optional<User> user = User.getNameFromToken(token, repository);
+		
+		if(!user.isPresent()) {
+			throw new NotFoundException("The user token is invalid");
+		}
+		library.addRemoveLikes(user.get().getName());
+		// Builds the response. Returns the library the has just been added.
+		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
+		URI uri = ub.build(library.getId());
+		ResponseBuilder resp = Response.created(uri);
+		resp.entity(library);			
+		return resp.build();
+	}
 	
 	@PUT
 	@Consumes("application/json")
