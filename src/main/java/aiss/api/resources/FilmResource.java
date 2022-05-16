@@ -233,7 +233,8 @@ public class FilmResource {
 		
 		if (film.getRuntime()!=null)
 			oldfilm.setLanguage(film.getLanguage());
-
+		
+		repository.updateFilm(oldfilm);
 		
 		return Response.noContent().build();
 	}
