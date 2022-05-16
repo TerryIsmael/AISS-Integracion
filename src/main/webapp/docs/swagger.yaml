@@ -446,7 +446,43 @@ paths:
           description: Library deleted
         "404":
           description: Library or film not found
-  /libraries/{libraryId}/{filmId}:
+/libraries/{myId}/{copyId}:  
+    put:
+    tags:
+    - libraries
+    summary: Add film to library
+    description: Add film to library
+    operationId: addFilmToLibrary
+    parameters:
+    - name: libraryId
+      in: path
+      description: Id of the library
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    - name: filmId
+      in: path
+      description: Id of the film
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+      responses:
+        "201":
+          description: Film added to library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: Bad request
+        "404":
+          description: Library or film not found
+
+/libraries/{libraryId}/{filmId}:
     post:
       tags:
       - libraries
