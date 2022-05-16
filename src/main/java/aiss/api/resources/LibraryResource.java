@@ -273,7 +273,6 @@ public class LibraryResource {
 			
 		repository.addFilm(libraryId, filmId);		
 
-		// Builds the response
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder().path(this.getClass(), "get");
 		URI uri = ub.build(libraryId);
 		ResponseBuilder resp = Response.created(uri);
