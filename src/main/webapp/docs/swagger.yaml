@@ -197,7 +197,7 @@ paths:
         explode: true
         schema:
           type: string
-        example: '2021'
+        example: '2019'
       - name: language
         in: query
         description: Filter by matching language
