@@ -26,7 +26,7 @@ import aiss.model.repository.MapLibraryRepository;
 @Path("/users")
 public class UserResource {
 	/* Singleton */
-	public static Predicate<String> p1=v-> v == null || "".equals(v);
+	public static Predicate<String> p1=v-> v == null || "".equals(v.trim());
 	public static Predicate<User> p2=v-> v == null;
 	public static UserResource _instance = null;
 	LibraryRepository repository;
