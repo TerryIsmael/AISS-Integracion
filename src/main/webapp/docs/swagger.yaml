@@ -137,7 +137,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
-        example: 7
+        example: 0
       - name: limit
         in: query
         description: Maximum number of results
@@ -148,7 +148,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
-        example: 10
+        example: 2
       - name: score
         in: query
         description: Range of score of the results
@@ -177,7 +177,7 @@ paths:
         explode: true
         schema:
           type: string
-        example: Action
+        example: 'Crime drama'
       - name: runtime
         in: query
         description: Filter by matching runtime
@@ -188,7 +188,7 @@ paths:
           minimum: 0
           type: integer
           format: int32
-        example: 90
+        example: 121
       - name: premiere
         in: query
         description: Filter by matching premiere date, format ('dd-MM-YYYY')
@@ -206,7 +206,7 @@ paths:
         explode: true
         schema:
           type: string
-        example: Spanish
+        example: 'English'
       responses:
         "200":
           description: Search results matching criteria
