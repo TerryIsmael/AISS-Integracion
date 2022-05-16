@@ -34,6 +34,16 @@ public class Library {
 		likes = n;
 	}
 	
+	public void addRemoveLikes(String user) {
+		if(usersLike.contains(user)) {
+			usersLike.remove(usersLike.indexOf(user));
+			likes--;
+		}else {
+			usersLike.add(user);
+			likes++;
+		}
+	}
+	
 	public String getUsername() {
 		return this.username;
 	}
