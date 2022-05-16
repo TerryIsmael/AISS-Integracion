@@ -486,6 +486,38 @@ paths:
                 $ref: '#/components/schemas/inline_response_200_2'
         "404":
           description: Library not found
+    post:
+      tags:
+      - libraries
+      summary: Add or remove a like
+      description: Add a like, or remove if you have already liked it
+      operationId: addRemoveLike
+      parameters: 
+      - name: token
+        in: query
+        description: Your user token
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Library id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "201":
+          description: Like added or removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "400":
+          description: Bad request
     delete:
       tags:
       - libraries

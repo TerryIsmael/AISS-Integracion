@@ -606,6 +606,7 @@ public class Data {
 			Library l=new Library("Example"+i);
 			l.setDescription("This library is an example of a library");
 			l.setUsername("admin");
+			l.setHidden(i%2==0?false:true);
 			res.add(l);
 		}
 		return res;

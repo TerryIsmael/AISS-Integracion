@@ -20,6 +20,8 @@ public class Library {
 	
 	public Library(String name) {
 		this.name = name;
+		this.usersLike=new ArrayList<>();
+		this.films=new ArrayList<>();
 	}
 	
 	public void setFilms(List<Film> s) {
