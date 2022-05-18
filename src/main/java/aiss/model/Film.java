@@ -9,7 +9,7 @@ public class Film {
 
 	private String id;
 	private String title;
-	private String genre;
+	private List<String> genre;
 	private String premiere;
 	private Integer runtime;
 	private Double score;
@@ -20,7 +20,7 @@ public class Film {
 		
 	}
 	
-	public Film(String title, String genre, String premiere, Integer runtime, Double score, List<String> language) {
+	public Film(String title, List<String> genre, String premiere, Integer runtime, Double score, List<String> language) {
 		super();
 		this.title = title;
 		this.genre = genre;
@@ -30,7 +30,7 @@ public class Film {
 		this.language = language;
 	}
 	
-	public Film(String id, String title, String genre, String premiere, Integer runtime, Double score, List<String> language) {
+	public Film(String id, String title, List<String> genre, String premiere, Integer runtime, Double score, List<String> language) {
 		super();
 		this.id=id;
 		this.title = title;
@@ -49,12 +49,16 @@ public class Film {
 			idiomas.add(idioma);
 		}
 		this.title = trozos[0].trim();
-		this.genre = trozos[1].trim();
-		//this.premiere = LocalDate.parse(trozos[2].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		List<String> generos=new ArrayList<>();
+		String[] generos_arr=trozos[1].split("/");
+		for(String genero:generos_arr) {
+			generos.add(genero);
+		}
 		this.premiere = trozos[2].trim().replace("/", "-");
 		this.runtime = Integer.valueOf(trozos[3].trim());
 		this.score = Double.valueOf(trozos[4].trim());
-		this.language =   idiomas;
+		this.language = idiomas;
+		this.genre = generos;
 	}
 	
 	public String getId() {
@@ -81,11 +85,11 @@ public class Film {
 		this.title = title;
 	}
 
-	public String getGenre() {
+	public List<String> getGenre() {
 		return genre;
 	}
 
-	public void setGenre(String genre) {
+	public void setGenre(List<String> genre) {
 		this.genre = genre;
 	}
 
