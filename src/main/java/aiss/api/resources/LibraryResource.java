@@ -62,8 +62,14 @@ public class LibraryResource {
 
 	@GET
 	@Produces("application/json")
-	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name)
+	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name,  @QueryParam("name") String token)
 	{
+		Optional<User> user = User.getNameFromToken(token, repository);
+		if(!isNull.test(token)) {
+			if(!user.isPresent()) {
+				throw new NotFoundException("The user token is invalid");
+			}
+		}
 		Collection<Library> res=repository.getAllLibraries();
 		if (isEmpty!=null) {
 			if (isEmpty==true) {
@@ -83,7 +89,7 @@ public class LibraryResource {
 				res= res.stream().sorted(Comparator.comparing(x->x.getName(),Comparator.reverseOrder())).collect(Collectors.toList());
 			}
 		}
-		return res.stream().filter(x->x.getHidden().equals(false)).collect(Collectors.toList());
+		return res.stream().filter(x->x.getHidden().equals(false) || user.isPresent()?x.getUsername().equals(user.get().getName()):false).collect(Collectors.toList());
 	}
 	
 	
