@@ -353,7 +353,6 @@ paths:
       - name: token
         in: query
         description: Your user token
-        required: true
         style: simple
         explode: false
         schema:
