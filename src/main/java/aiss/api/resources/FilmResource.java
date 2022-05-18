@@ -65,7 +65,7 @@ public class FilmResource {
             res = res.stream().filter(x -> x.getTitle().toLowerCase().contains(title.toLowerCase())).collect(Collectors.toList());
         } 
         if (genre != null) {
-            res = res.stream().filter(x -> x.getGenre().stream().map(y->y.toLowerCase()).collect(Collectors.toList()).contains(genre)).collect(Collectors.toList());
+            res = res.stream().filter(x -> x.getGenre().stream().map(y->y.toLowerCase()).collect(Collectors.toList()).contains(genre.toLowerCase())).collect(Collectors.toList());
         }
         if (premiere != null) {
         	if(premiere.matches("[0-3]?[1-9][/-][01]?[1-9][/-][12][0-9][0-9][0-9]")) {
@@ -96,7 +96,7 @@ public class FilmResource {
 		}
 		
 		if (language != null) {
-            res = res.stream().filter(x -> x.getLanguage().contains(language)).collect(Collectors.toList());
+            res = res.stream().filter(x -> x.getLanguage().stream().map(y->y.toLowerCase()).collect(Collectors.toList()).contains(language.toLowerCase())).collect(Collectors.toList());
         }
 		
 		if (!isNull.test(sort)) {
