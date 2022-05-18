@@ -162,7 +162,7 @@ public class FilmResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addFilm(@Context UriInfo uriInfo,@PathParam("token") String token,Film film) {
+	public Response addFilm(@Context UriInfo uriInfo,@QueryParam("token") String token,Film film) {
 		if(isNull.test(token)) {
 			throw new BadRequestException("Token parameter cannot be null");
 		}
@@ -192,7 +192,7 @@ public class FilmResource {
 	
 	@PUT
 	@Consumes("application/json")
-	public Response updateFilm(Film film, @PathParam("token") String token) {
+	public Response updateFilm(Film film, @QueryParam("token") String token) {
 		Film oldfilm = repository.getFilm(film.getId());
 		if (oldfilm == null) {
 			throw new NotFoundException("The film with id="+ film.getId() +" was not found");			
@@ -241,7 +241,7 @@ public class FilmResource {
 	
 	@DELETE
 	@Path("/{id}")
-	public Response removeFilm(@PathParam("id") String filmId, @PathParam("token") String token) {
+	public Response removeFilm(@PathParam("id") String filmId, @QueryParam("token") String token) {
 		Film toberemoved=repository.getFilm(filmId);
 		if (toberemoved == null)
 			throw new NotFoundException("The playlist with id="+ filmId +" was not found");
