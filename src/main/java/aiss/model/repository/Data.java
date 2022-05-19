@@ -607,9 +607,11 @@ public class Data {
 			l.setDescription("This library is an example of a library");
 			l.setUsername("admin");
 			l.setHidden(i%2==0?false:true);
+			l.setLikes(0);
 			res.add(l);
 		}
 		return res;
+		
 	}
 	public static User lectura_users() {
 		return new User("admin","admin");

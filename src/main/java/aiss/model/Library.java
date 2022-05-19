@@ -36,6 +36,11 @@ public class Library {
 		likes = n;
 	}
 	
+	public void setLikesToZero() {
+		likes = 0;
+		usersLike=new ArrayList<>();
+	}
+	
 	public void addRemoveLikes(String user) {
 		if(usersLike.contains(user)) {
 			usersLike.remove(usersLike.indexOf(user));

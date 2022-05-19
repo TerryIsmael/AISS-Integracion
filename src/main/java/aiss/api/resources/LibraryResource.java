@@ -62,7 +62,7 @@ public class LibraryResource {
 
 	@GET
 	@Produces("application/json")
-	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name,  @QueryParam("name") String token)
+	public Collection<Library> getAll(@QueryParam("order") String order,@QueryParam("isEmpty") Boolean isEmpty, @QueryParam("name") String name,  @QueryParam("token") String token)
 	{
 		Optional<User> user = User.getNameFromToken(token, repository);
 		if(!isNull.test(token)) {
@@ -80,7 +80,7 @@ public class LibraryResource {
 		}
 
 		if (name!=null) {
-			res= res.stream().filter(x->x.getName()==name).collect(Collectors.toList());
+			res= res.stream().filter(x->x.getName().equals(name)).collect(Collectors.toList());
 		}
 		if (order!=null && (order.equals("name") || order.equals("-name"))) {
 			if (order.equals("name")) {
@@ -89,7 +89,11 @@ public class LibraryResource {
 				res= res.stream().sorted(Comparator.comparing(x->x.getName(),Comparator.reverseOrder())).collect(Collectors.toList());
 			}
 		}
-		return res.stream().filter(x->x.getHidden().equals(false) || user.isPresent()?x.getUsername().equals(user.get().getName()):false).collect(Collectors.toList());
+		if(user.isPresent()) {
+			return res.stream().filter(x->x.getHidden().equals(false) || x.getUsername().equals(user.get().getName())).collect(Collectors.toList());
+		}else {
+			return res.stream().filter(x->x.getHidden().equals(false)).collect(Collectors.toList());
+		}
 	}
 	
 	
@@ -138,14 +142,23 @@ public class LibraryResource {
 		
 		if (library.getUsername()!=null)
 			throw new BadRequestException("username property is not editable by this way.");
-
+		
+		if (library.getHidden()==null || library.getHidden()==false)
+			library.setHidden(false);
+		else if (library.getHidden()==(true)) 
+			library.setHidden(true);
+		else
+			throw new BadRequestException("Hidden only can be true or false.");
+		
+		
+		
 		Optional<User> user = User.getNameFromToken(token, repository);
 		
 		if(!user.isPresent()) {
 			throw new NotFoundException("The user token is invalid");
 		}
 		library.setUsername(user.get().getName());
-		library.setLikes(0);
+		library.setLikesToZero();
 
 		repository.addLibrary(library);
 
@@ -201,7 +214,7 @@ public class LibraryResource {
 		if (oldlibrary == null) {
 			throw new NotFoundException("The library with id="+ library.getId() +" was not found");			
 		} else if(!oldlibrary.getUsername().equals(user.get().getName())){
-			throw new NotFoundException("The library with id="+ library.getId() +" is a private library");
+			throw new NotFoundException("The library with id="+ library.getId() +" is not yours");
 		}
 		
 		if (library.getFilms()!=null)
@@ -214,7 +227,7 @@ public class LibraryResource {
 			throw new BadRequestException("Likes property is not editable by this way.");
 		
 		if (library.getUsername()!=null)
-			throw new BadRequestException("username property is not editable by this way.");
+			throw new BadRequestException("Username property is not editable by this way.");
 		
 		if (library.getName()!=null)
 			oldlibrary.setName(library.getName());
@@ -337,6 +350,11 @@ public class LibraryResource {
 				Film film = repository.getFilm(filmId);
 				if (film == null)
 					throw new NotFoundException("The film with id=" + filmId + " was not found");
+				if (library==null || !library.getUsername().equals(user.get().getName()))
+					throw new NotFoundException("The library with id=" + libraryId + " was not found or does not belong to you");
+				if (!library.getFilms().contains(film))
+					throw new NotFoundException("The film with id=" + filmId + " was not found in this library");
+				
 				repository.removeFilm(libraryId, filmId);		
 			}else {
 				library.setFilms(new ArrayList<>());
