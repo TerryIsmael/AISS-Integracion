@@ -79,10 +79,10 @@ public class LibraryResource {
 			}
 		}
 
-		if (name!=null) {
+		if (!isNull.test(name)) {
 			res= res.stream().filter(x->x.getName().equals(name)).collect(Collectors.toList());
 		}
-		if (order!=null && (order.equals("name") || order.equals("-name"))) {
+		if (!isNull.test(order) && (order.equals("name") || order.equals("-name"))) {
 			if (order.equals("name")) {
 				res= res.stream().sorted(Comparator.comparing(x->x.getName())).collect(Collectors.toList());
 			}else {

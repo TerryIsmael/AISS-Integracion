@@ -61,13 +61,13 @@ public class FilmResource {
             @QueryParam("runtime") Integer runtime, @QueryParam("score") String score, @QueryParam("language") String language){    
 		Collection<Film>  res= repository.getAllFilms();
 		
-		if ( title != null) {
+		if ( !isNull.test(title)) {
             res = res.stream().filter(x -> x.getTitle().toLowerCase().contains(title.toLowerCase())).collect(Collectors.toList());
         } 
-        if (genre != null) {
+        if (!isNull.test(genre)) {
             res = res.stream().filter(x -> x.getGenre().stream().map(y->y.toLowerCase()).collect(Collectors.toList()).contains(genre.toLowerCase())).collect(Collectors.toList());
         }
-        if (premiere != null) {
+        if (!isNull.test(premiere)) {
         	if(premiere.matches("[0-3]?[1-9][/-][01]?[1-9][/-][12][0-9][0-9][0-9]")) {
         		res = res.stream().filter(x -> x.getPremiere().equals(premiere)).collect(Collectors.toList());
             }else if(premiere.matches("[12][0-9][0-9][0-9]")) {
@@ -84,7 +84,7 @@ public class FilmResource {
 			}
         }
 		
-		if (score != null) {
+		if (!isNull.test(score)) {
 			if(score.matches("[0-9.]+[-][0-9.]+")) {
 	            String[] trozos = score.split("-");
 	            Double rangoInferior = Double.valueOf(trozos[0].trim());
@@ -95,7 +95,7 @@ public class FilmResource {
 			}
 		}
 		
-		if (language != null) {
+		if (!isNull.test(language)) {
             res = res.stream().filter(x -> x.getLanguage().stream().map(y->y.toLowerCase()).collect(Collectors.toList()).contains(language.toLowerCase())).collect(Collectors.toList());
         }
 		

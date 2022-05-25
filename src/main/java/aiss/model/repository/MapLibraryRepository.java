@@ -46,10 +46,18 @@ public class MapLibraryRepository implements LibraryRepository{
 			
 		}
 		addUser(Data.lectura_users());
+		addUser1();
 	}
 	@Override
 	public void addUser(User user) {
 		String token=TokenGen.RandomToken();
+		user.setToken(token);
+		userMap.put(token, user);
+	}
+	
+	public void addUser1() {
+		String token="consumo";
+		User user=new User("consumo","consumo");
 		user.setToken(token);
 		userMap.put(token, user);
 	}
