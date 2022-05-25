@@ -614,7 +614,7 @@ public class Data {
 		
 	}
 	public static User lectura_users() {
-		return new User("admin","admin");
+		return new User("admin","l8g1admin");
 	}
 	
 }
