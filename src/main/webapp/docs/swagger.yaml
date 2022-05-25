@@ -2,7 +2,7 @@
 openapi: 3.0.0
 info:
   title: NetflixAPI
-  description: Search for your favourite Netflix films and create your own libraries
+  description: Search for your favourite Netflix films and create your own libraries. (***NOTES*** Exists a generic user "consumo" with password "consumo" and token "consumo" to help people to consume the API)
   contact:
     email: danarrarr@alum.us.es
   license:
